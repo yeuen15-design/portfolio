@@ -11,10 +11,7 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 
-html,body{
-  width:100%;
-  overflow-x:hidden;
-}
+html,body{width:100%;overflow-x:hidden;}
 
 /* 배경 */
 .bg{
@@ -25,40 +22,41 @@ html,body{
 
 /* 로고 */
 .logo{
-  position:fixed;
-  top:22px;left:24px;
-  height:52px;width:auto;
-  z-index:200;
+  position:fixed;top:22px;left:24px;
+  height:52px;width:auto;z-index:200;
   animation:spin 8s linear infinite;
 }
-@keyframes spin{
-  from{transform:rotate(0deg);}
-  to{transform:rotate(360deg);}
-}
+@keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
 
 /* 인스타 */
 .insta{
-  position:fixed;
-  top:26px;right:24px;
-  z-index:200;
-  opacity:.85;
-  transition:opacity .2s;
+  position:fixed;top:26px;right:24px;
+  z-index:200;opacity:.85;transition:opacity .2s;
 }
 .insta:hover{opacity:1;}
 .insta svg{width:24px;height:24px;fill:white;}
 
-/* 그리드 */
+/* ── 메인 래퍼 — 패널 열릴 때 오른쪽으로 압축 ── */
 .main{
-  position:relative;
-  z-index:10;
+  position:relative;z-index:10;
   padding:96px 24px 40px;
+  transition:padding-right .5s cubic-bezier(.22,1,.36,1);
 }
+/* 패널 열리면 오른쪽 패딩을 패널 너비만큼 확보 */
+body.panel-open .main{
+  padding-right: calc(var(--panel-w) + 24px);
+}
+
 .grid{
   column-count:4;
   column-gap:6px;
+  transition:column-count .4s;
 }
 @media(max-width:1000px){.grid{column-count:3;}}
 @media(max-width:680px){.grid{column-count:2;}}
+
+/* 패널 열릴 때 컬럼 수 줄이기 */
+body.panel-open .grid{column-count:2;}
 
 .card{
   break-inside:avoid;
@@ -67,8 +65,7 @@ html,body{
   cursor:pointer;
 }
 .card img{
-  width:100%;height:auto;
-  display:block;
+  width:100%;height:auto;display:block;
   transition:transform .6s cubic-bezier(.22,1,.36,1), opacity .3s;
 }
 .card:hover img{transform:scale(1.03);opacity:.85;}
@@ -82,24 +79,12 @@ html,body{
   color:rgba(255,255,255,.4);
 }
 
-/* ── 딤 오버레이 ── */
-.dim{
-  position:fixed;inset:0;
-  background:rgba(0,0,0,0);
-  z-index:300;
-  pointer-events:none;
-  transition:background .4s ease;
-}
-.dim.on{
-  background:rgba(0,0,0,.45);
-  pointer-events:auto;
-}
-
 /* ── 슬라이드 패널 ── */
+:root{--panel-w: 480px;}
+
 .panel{
-  position:fixed;
-  top:0;right:0;
-  width:min(560px, 90vw);
+  position:fixed;top:0;right:0;
+  width:var(--panel-w);
   height:100vh;
   background:#f2ede6;
   z-index:400;
@@ -107,47 +92,48 @@ html,body{
   transition:transform .5s cubic-bezier(.22,1,.36,1);
   overflow-y:auto;
   display:flex;flex-direction:column;
+  /* 리사이즈 핸들 */
+  resize:horizontal;
+  overflow:auto;
+  min-width:280px;
+  max-width:90vw;
 }
 .panel.open{transform:translateX(0);}
 
-/* 닫기 버튼 */
+/* 왼쪽 리사이즈 핸들 (드래그바) */
+.resize-handle{
+  position:absolute;top:0;left:0;
+  width:5px;height:100%;
+  cursor:ew-resize;
+  background:transparent;
+  z-index:10;
+}
+.resize-handle:hover{background:rgba(212,39,10,.2);}
+
+/* 닫기 */
 .panel-close{
   position:sticky;top:0;
   display:flex;justify-content:flex-end;
   padding:20px 24px 0;
-  background:#f2ede6;
-  z-index:1;
+  background:#f2ede6;z-index:1;
 }
 .panel-close button{
   background:none;border:none;cursor:pointer;
   font-family:'IBM Plex Mono',monospace;
   font-size:9px;letter-spacing:.2em;text-transform:uppercase;
-  color:#4a4038;
-  display:flex;align-items:center;gap:8px;
+  color:#4a4038;display:flex;align-items:center;gap:8px;
   transition:color .2s;
 }
 .panel-close button:hover{color:#d4270a;}
-.panel-close button::before{
-  content:'←';font-size:14px;
-}
+.panel-close button::before{content:'←';font-size:14px;}
 
-/* 패널 이미지 */
-.panel-img{
-  width:100%;height:auto;
-  display:block;
-  margin-top:16px;
-}
+.panel-img{width:100%;height:auto;display:block;margin-top:16px;}
 
-/* 패널 텍스트 */
-.panel-body{
-  padding:32px 32px 48px;
-}
+.panel-body{padding:32px 32px 48px;}
 .panel-title{
   font-family:'Noto Serif KR',serif;
-  font-size:22px;font-weight:500;
-  color:#181410;
-  line-height:1.4;
-  margin-bottom:8px;
+  font-size:22px;font-weight:500;color:#181410;
+  line-height:1.4;margin-bottom:8px;
 }
 .panel-meta{
   font-family:'IBM Plex Mono',monospace;
@@ -156,15 +142,13 @@ html,body{
 }
 .panel-text{
   font-family:'Noto Serif KR',serif;
-  font-size:14px;font-weight:300;
-  color:#4a4038;line-height:2;
+  font-size:14px;font-weight:300;color:#4a4038;line-height:2;
 }
 </style>
 </head>
 <body>
 
 <div class="bg"></div>
-
 <img class="logo" src="images/Logo.png" alt="解放"/>
 
 <a class="insta" href="https://instagram.com/haebang.drawing" target="_blank">
@@ -174,33 +158,23 @@ html,body{
 <div class="main">
   <div class="grid">
     <div class="card" data-title="나만의 카운슬러 공자" data-meta="출판 · 2025" data-img="images/work1.jpg" data-text="2,500년을 넘어 전해진 공자의 지혜를 오늘의 언어로 재해석한 책. 삶의 방향을 잃었을 때 단단한 기준이 되어주는 철학 에세이다. 흔들리는 마음을 붙잡는 문장들을 한 권에 담았다. 독자 스스로 자신만의 카운슬러를 찾아가는 여정을 그린다. 표지 디자인은 고요함과 긴장감을 동시에 담아내는 방향으로 작업했다.">
-      <img src="images/work1.jpg" alt="work1"/>
-    </div>
+      <img src="images/work1.jpg" alt="work1"/></div>
     <div class="card" data-title="작업 제목 02" data-meta="브랜딩 · 2025" data-img="images/work2.jpg" data-text="브랜드의 정체성을 시각 언어로 풀어낸 아이덴티티 작업. 로고부터 컬러 시스템까지 일관된 톤을 유지했다. 단순함 속에 깊이를 담는 것을 목표로 삼았다. 다양한 매체에서 유연하게 적용되도록 시스템을 설계했다. 브랜드가 전하고자 하는 메시지를 형태로 번역하는 과정에 집중했다.">
-      <img src="images/work2.jpg" alt="work2"/>
-    </div>
+      <img src="images/work2.jpg" alt="work2"/></div>
     <div class="card" data-title="작업 제목 03" data-meta="그래픽 · 2024" data-img="images/work3.jpg" data-text="이미지와 텍스트가 교차하는 지점에서 시작된 그래픽 작업. 인쇄물의 물성을 염두에 두고 색과 여백을 설계했다. 보는 이에게 여운을 남기는 구성을 고민했다. 레이아웃의 긴장감을 유지하면서도 읽기 편한 흐름을 만들었다. 그래픽 언어로 감정을 전달하는 가능성을 탐구했다.">
-      <img src="images/work3.jpg" alt="work3"/>
-    </div>
+      <img src="images/work3.jpg" alt="work3"/></div>
     <div class="card" data-title="작업 제목 04" data-meta="편집 · 2024" data-img="images/work4.jpg" data-text="편집 디자인의 리듬감을 탐구한 프로젝트. 페이지마다 다른 호흡을 갖되 전체적인 통일감을 유지했다. 타이포그래피와 이미지 사이의 관계를 실험했다. 독자의 시선이 자연스럽게 흐르도록 구성을 다듬었다. 종이 위에서만 가능한 감각을 최대한 끌어내고자 했다.">
-      <img src="images/work4.jpg" alt="work4"/>
-    </div>
-    <div class="card" data-title="작업 제목 05" data-meta="출판 · 2024" data-img="images/work5.jpg" data-text="독립 출판의 형식을 빌려 개인적인 서사를 담은 책. 내용과 형식이 서로를 지지하는 구조를 만들었다. 작은 판형 안에 밀도 있는 이야기를 압축했다. 제본 방식부터 종이 선택까지 물성을 세심하게 고려했다. 읽는 경험 자체가 하나의 작업이 되도록 설계했다.">
-      <img src="images/work5.jpg" alt="work5"/>
-    </div>
+      <img src="images/work4.jpg" alt="work4"/></div>
     <div class="card" data-title="작업 제목 06" data-meta="그래픽 · 2024" data-img="images/work6.jpg" data-text="자유와 해방을 주제로 한 그래픽 시리즈. 억압된 감각을 시각적으로 풀어내는 실험적 작업이다. 형태가 규칙을 벗어나는 순간의 에너지를 포착했다. 색의 충돌과 조화를 통해 긴장과 해소를 반복한다. 보는 이가 스스로의 자유를 상상하게 만드는 것이 목표였다.">
-      <img src="images/work6.jpg" alt="work6"/>
-    </div>
+      <img src="images/work6.jpg" alt="work6"/></div>
   </div>
 </div>
 
 <p class="copy">©2025 解放. Seoul, KR</p>
 
-<!-- 딤 -->
-<div class="dim" id="dim"></div>
-
 <!-- 슬라이드 패널 -->
 <div class="panel" id="panel">
+  <div class="resize-handle" id="resizeHandle"></div>
   <div class="panel-close">
     <button id="closeBtn">닫기</button>
   </div>
@@ -213,36 +187,58 @@ html,body{
 </div>
 
 <script>
-const panel  = document.getElementById('panel');
-const dim    = document.getElementById('dim');
-const closeBtn = document.getElementById('closeBtn');
+const panel     = document.getElementById('panel');
+const closeBtn  = document.getElementById('closeBtn');
+const handle    = document.getElementById('resizeHandle');
 
 function openPanel(card) {
-  document.getElementById('panelImg').src   = card.dataset.img;
+  document.getElementById('panelImg').src = card.dataset.img;
   document.getElementById('panelTitle').textContent = card.dataset.title;
   document.getElementById('panelMeta').textContent  = card.dataset.meta;
   document.getElementById('panelText').textContent  = card.dataset.text;
   panel.classList.add('open');
-  dim.classList.add('on');
-  document.body.style.overflow = 'hidden';
+  document.body.classList.add('panel-open');
+  // CSS 변수에 현재 패널 너비 반영
+  document.documentElement.style.setProperty('--panel-w', panel.offsetWidth + 'px');
+  panel.scrollTop = 0;
 }
 
 function closePanel() {
   panel.classList.remove('open');
-  dim.classList.remove('on');
-  document.body.style.overflow = '';
+  document.body.classList.remove('panel-open');
 }
 
-document.querySelectorAll('.card').forEach(card => {
-  card.addEventListener('click', () => openPanel(card));
+document.querySelectorAll('.card').forEach(c => {
+  c.addEventListener('click', () => openPanel(c));
+});
+closeBtn.addEventListener('click', closePanel);
+document.addEventListener('keydown', e => { if(e.key==='Escape') closePanel(); });
+
+// ── 드래그로 패널 너비 조절 ──
+let dragging = false;
+let startX, startW;
+
+handle.addEventListener('mousedown', e => {
+  dragging = true;
+  startX = e.clientX;
+  startW = panel.offsetWidth;
+  document.body.style.userSelect = 'none';
+  document.body.style.cursor = 'ew-resize';
 });
 
-closeBtn.addEventListener('click', closePanel);
-dim.addEventListener('click', closePanel);
+document.addEventListener('mousemove', e => {
+  if(!dragging) return;
+  const dx = startX - e.clientX;
+  const newW = Math.min(Math.max(startW + dx, 280), window.innerWidth * 0.9);
+  panel.style.width = newW + 'px';
+  document.documentElement.style.setProperty('--panel-w', newW + 'px');
+});
 
-// ESC로 닫기
-document.addEventListener('keydown', e => {
-  if(e.key === 'Escape') closePanel();
+document.addEventListener('mouseup', () => {
+  if(!dragging) return;
+  dragging = false;
+  document.body.style.userSelect = '';
+  document.body.style.cursor = '';
 });
 </script>
 
