@@ -77,6 +77,13 @@ html,body{
   color:rgba(255,255,255,.4);
 }
 
+#dot{
+  position:fixed;width:7px;height:7px;border-radius:50%;
+  background:#d4270a;pointer-events:none;z-index:9999;
+  transform:translate(-50%,-50%);
+  transition:width .18s,height .18s;
+  mix-blend-mode:multiply;
+}
 </style>
 </head>
 <body>
@@ -88,16 +95,23 @@ html,body{
 
 <div class="main">
   <div class="grid">
-    <div class="card">
-      <img src="work1.jpg" alt="나만의 카운슬러 공자"/>
-    </div>
-    <!-- 이미지 추가 시 여기에 .card 블록 추가 -->
+    <div class="card"><img src="work1.jpg" alt="work1"/></div>
+    <div class="card"><img src="work2.jpg" alt="work2"/></div>
+    <div class="card"><img src="work3.jpg" alt="work3"/></div>
+    <div class="card"><img src="work4.jpg" alt="work4"/></div>
+    <div class="card"><img src="work5.jpg" alt="work5"/></div>
+    <div class="card"><img src="work6.jpg" alt="work6"/></div>
   </div>
 </div>
 
 <p class="copy">©2025 解放. Seoul, KR</p>
 
 <script>
+const dot = document.getElementById('dot');
+document.addEventListener('mousemove', e => {
+  dot.style.left = e.clientX + 'px';
+  dot.style.top  = e.clientY + 'px';
+});
 </script>
 
 </body>
