@@ -6,296 +6,65 @@
 <title>解放 — Portfolio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500;700;900&family=Bebas+Neue&family=IBM+Plex+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400&display=swap" rel="stylesheet"/>
 
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 
-:root{
-  --paper: #f2ede6;
-  --paper2: #e9e2d5;
-  --ink: #181410;
-  --ink2: #4a4038;
-  --red: #d4270a;
-  --rule: #ccc4b6;
-  --gap: 2px;
+html,body{
+  width:100%;height:100%;
+  overflow:hidden;
 }
 
-html{scroll-behavior:smooth;}
-body{
-  background:var(--paper);
-  color:var(--ink);
-  font-family:'Noto Serif KR',serif;
-  min-height:100vh;
-  overflow-x:hidden;
+.bg{
+  position:fixed;inset:0;
+  background:url('hero.jpg') center/cover no-repeat;
+  z-index:0;
 }
 
-/* grain */
-body::after{
-  content:'';position:fixed;inset:0;
+.bg::after{
+  content:'';position:absolute;inset:0;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  opacity:.04;pointer-events:none;z-index:9997;
+  opacity:.04;pointer-events:none;
 }
 
-/* ── NAV ── */
-nav{
-  position:fixed;top:0;left:0;right:0;height:52px;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 28px;
-  background:var(--paper);
-  border-bottom:1px solid var(--rule);
-  z-index:500;
-}
-.nav-left{display:flex;align-items:center;gap:20px;}
-.nav-label{
-  font-family:'IBM Plex Mono',monospace;
-  font-size:9px;letter-spacing:.2em;text-transform:uppercase;
-  color:var(--ink2);line-height:1.7;
-}
-.nav-div{width:1px;height:18px;background:var(--rule);}
-.nav-links{display:flex;gap:22px;}
-.nav-links a{
-  font-family:'IBM Plex Mono',monospace;
-  font-size:9px;letter-spacing:.18em;text-transform:uppercase;
-  color:var(--ink2);text-decoration:none;
-  transition:color .2s;
-}
-.nav-links a:hover{color:var(--red);}
-
-/* 로고 우상단 — 검정 배경 PNG를 mix-blend-mode:multiply로 자연스럽게 */
-.nav-logo{
-  height:36px;width:auto;display:block;
+.logo{
+  position:fixed;
+  top:22px;left:24px;
+  height:52px;width:auto;
+  z-index:100;
   mix-blend-mode:multiply;
 }
 
-/* ── HERO ── */
-.hero{
-  margin-top:52px;
-  width:100%;height:calc(100vh - 52px);
-  position:relative;overflow:hidden;
-  background:var(--paper2);
-  display:flex;flex-direction:column;justify-content:flex-end;
-}
-.hero-bg{
-  position:absolute;inset:0;
-  background:var(--paper2);
-  /* 히어로 이미지: background:url('hero.jpg') center/cover no-repeat; */
-  display:flex;align-items:center;justify-content:center;
-}
-.hero-bg span{
-  font-family:'IBM Plex Mono',monospace;
-  font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#b5ad9f;
-}
-.hero-content{
-  position:relative;z-index:2;
-  padding:32px;
-  display:flex;align-items:flex-end;justify-content:space-between;
-  gap:20px;
-}
-.hero-title{
-  font-family:'Bebas Neue',sans-serif;
-  font-size:clamp(64px,9vw,130px);
-  line-height:.9;letter-spacing:-.01em;
-  color:var(--ink);
-}
-.hero-title em{
-  font-family:'Noto Serif KR',serif;
-  font-style:italic;font-weight:300;
-  font-size:.35em;display:block;
-  letter-spacing:.06em;color:var(--ink2);
-  margin-bottom:8px;
-}
-.hero-meta{
-  text-align:right;
-  font-family:'IBM Plex Mono',monospace;
-  font-size:9px;letter-spacing:.16em;line-height:2.2;
-  text-transform:uppercase;color:var(--ink2);
-}
-.hero-meta strong{color:var(--red);font-weight:400;}
-
-/* ── ISSUE BAR ── */
-.issue-bar{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:12px 32px;
-  border-top:1px solid var(--rule);
-  border-bottom:1px solid var(--rule);
-  background:var(--paper);
-}
-.issue-no{
-  font-family:'IBM Plex Mono',monospace;
-  font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--red);
-}
-.issue-tagline{
-  font-family:'IBM Plex Mono',monospace;
-  font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink2);
-  font-style:italic;
+.book{
+  position:fixed;
+  left:48px;
+  bottom:60px;
+  width:clamp(160px, 18vw, 280px);
+  z-index:50;
+  filter:drop-shadow(0 12px 32px rgba(0,0,0,0.45));
+  animation:floatIn .9s cubic-bezier(.22,1,.36,1) both;
 }
 
-/* ── SECTION HEADER ── */
-.sec-head{
-  display:flex;align-items:center;gap:14px;
-  padding:26px 32px 14px;
-  border-top:2px solid var(--ink);
+@keyframes floatIn{
+  from{opacity:0;transform:translateY(24px);}
+  to{opacity:1;transform:translateY(0);}
 }
-.sec-head-label{
+
+.copy{
+  position:fixed;
+  bottom:24px;left:48px;
   font-family:'IBM Plex Mono',monospace;
-  font-size:9px;letter-spacing:.26em;text-transform:uppercase;
-  color:var(--ink);white-space:nowrap;
-}
-.sec-head-line{flex:1;height:1px;background:var(--rule);}
-.sec-head-count{
-  font-family:'IBM Plex Mono',monospace;
-  font-size:9px;letter-spacing:.14em;color:var(--ink2);
+  font-size:8px;letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(255,255,255,.45);
+  z-index:100;
 }
 
-/* ── MASONRY COLUMNS (inthe.graphics 방식) ── */
-.col-grid{
-  column-count:3;
-  column-gap:var(--gap);
-  padding:0 var(--gap) var(--gap);
-}
-@media(max-width:1080px){.col-grid{column-count:2;}}
-@media(max-width:620px) {.col-grid{column-count:1;}}
-
-/* ── 이미지 카드 ── */
-.card{
-  break-inside:avoid;
-  display:block;
-  margin-bottom:var(--gap);
-  position:relative;overflow:hidden;
-  cursor:pointer;
-  background:var(--paper2);
-}
-.card img{
-  width:100%;height:auto; /* 가로 고정, 세로 가변 */
-  display:block;
-  filter:saturate(.9) contrast(1.02);
-  transition:transform .7s cubic-bezier(.22,1,.36,1), filter .4s;
-}
-.card:hover img{transform:scale(1.04);filter:saturate(1.04) contrast(1.04);}
-
-.card-ph{
-  width:100%;
-  background:var(--paper2);
-  border:1px solid var(--rule);
-  display:flex;align-items:center;justify-content:center;
-}
-.card-ph span{
-  font-family:'IBM Plex Mono',monospace;
-  font-size:9px;letter-spacing:.12em;text-transform:uppercase;
-  color:#c0b8ae;text-align:center;padding:10px;
-}
-
-.card-ov{
-  position:absolute;inset:0;
-  background:linear-gradient(to top,rgba(18,14,8,.6) 0%,transparent 55%);
-  opacity:0;transition:opacity .3s;
-  display:flex;flex-direction:column;justify-content:flex-end;
-  padding:18px 16px 14px;
-}
-.card:hover .card-ov{opacity:1;}
-.card-title{
-  font-family:'Noto Serif KR',serif;
-  font-size:13px;font-weight:500;color:#f2ede6;line-height:1.4;
-}
-.card-sub{
-  font-family:'IBM Plex Mono',monospace;
-  font-size:9px;letter-spacing:.14em;text-transform:uppercase;
-  color:rgba(242,237,230,.55);margin-top:4px;
-}
-
-/* ── 텍스트 카드 (불규칙 매거진 포인트) ── */
-.card-txt{
-  break-inside:avoid;
-  margin-bottom:var(--gap);
-  background:var(--ink);
-  padding:36px 26px 28px;
-  display:flex;flex-direction:column;justify-content:space-between;
-  min-height:220px;
-  cursor:default;
-}
-.card-txt-big{
-  font-family:'Bebas Neue',sans-serif;
-  font-size:clamp(40px,4.5vw,68px);
-  line-height:.92;letter-spacing:.01em;color:var(--paper);
-}
-.card-txt-big em{
-  color:var(--red);font-style:normal;
-}
-.card-txt-sm{
-  font-family:'IBM Plex Mono',monospace;
-  font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;
-  color:rgba(242,237,230,.35);margin-top:22px;
-}
-
-/* ── 빨간 카드 ── */
-.card-red{
-  break-inside:avoid;
-  margin-bottom:var(--gap);
-  background:var(--red);
-  padding:28px 24px 24px;
-  min-height:180px;
-  display:flex;flex-direction:column;justify-content:flex-end;
-  cursor:default;
-}
-.card-red-label{
-  font-family:'IBM Plex Mono',monospace;
-  font-size:8px;letter-spacing:.22em;text-transform:uppercase;
-  color:rgba(242,237,230,.55);margin-bottom:10px;
-}
-.card-red-text{
-  font-family:'Noto Serif KR',serif;
-  font-size:19px;font-weight:700;
-  color:var(--paper);line-height:1.55;
-}
-
-/* ── FULL-WIDTH STRIP ── */
-.strip{
-  width:100%;aspect-ratio:21/6;
-  background:var(--paper2);
-  border-top:1px solid var(--rule);
-  border-bottom:1px solid var(--rule);
-  display:flex;align-items:center;justify-content:center;
-  overflow:hidden;position:relative;
-}
-.strip img{width:100%;height:100%;object-fit:cover;display:block;}
-.strip-label{
-  font-family:'IBM Plex Mono',monospace;
-  font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#b5ad9f;
-}
-
-/* ── FOOTER ── */
-footer{
-  border-top:2px solid var(--ink);
-  padding:24px 32px;
-  display:flex;justify-content:space-between;align-items:center;
-}
-.footer-left{
-  font-family:'IBM Plex Mono',monospace;
-  font-size:9px;letter-spacing:.18em;text-transform:uppercase;
-  color:var(--ink2);line-height:2.2;
-}
-.footer-logo{
-  height:30px;width:auto;
-  mix-blend-mode:multiply;opacity:.65;
-}
-
-/* ── ANIMATIONS ── */
-@keyframes rise{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
-.card,.card-txt,.card-red{animation:rise .65s cubic-bezier(.22,1,.36,1) both;}
-.card:nth-child(1){animation-delay:.04s}.card:nth-child(2){animation-delay:.08s}
-.card:nth-child(3){animation-delay:.12s}.card:nth-child(4){animation-delay:.16s}
-.card:nth-child(5){animation-delay:.20s}.card:nth-child(6){animation-delay:.24s}
-.card:nth-child(7){animation-delay:.28s}.card:nth-child(8){animation-delay:.32s}
-.card:nth-child(9){animation-delay:.36s}.card:nth-child(10){animation-delay:.40s}
-.card:nth-child(11){animation-delay:.44s}.card:nth-child(12){animation-delay:.48s}
-
-/* cursor */
 #dot{
   position:fixed;width:7px;height:7px;border-radius:50%;
-  background:var(--red);pointer-events:none;z-index:9998;
+  background:#d4270a;pointer-events:none;z-index:9999;
   transform:translate(-50%,-50%);
-  transition:width .18s,height .18s,opacity .18s;
+  transition:width .18s,height .18s;
   mix-blend-mode:multiply;
 }
 </style>
@@ -303,76 +72,17 @@ footer{
 <body>
 
 <div id="dot"></div>
+<div class="bg"></div>
 
-<!-- ── NAV ── -->
-<img src="Logo.png" style="position:fixed;top:16px;left:20px;height:44px;width:auto;z-index:600;mix-blend-mode:multiply;">
-<nav>
-
-</nav>
-
-<!-- ── HERO ── -->
-<section class="hero">
-  <div class="hero-bg">
-    <img src="hero.jpg" style="width:100%;height:100%;object-fit:cover;">
-  </div>
-
-</section>
-
-
-
-<!-- ── WORKS ── -->
-<div class="sec-head">
-  <span class="sec-head-label">Works</span>
-  <div class="sec-head-line"></div>
-  <span class="sec-head-count">1 Project</span>
-</div>
-
-<div class="col-grid">
-
-  <div class="card">
-    <img src="work1.jpg" alt="나만의 카운슬러 공자">
-    <div class="card-ov">
-      <p class="card-title">나만의 카운슬러 공자</p>
-      <p class="card-sub">출판 · 2025</p>
-    </div>
-  </div>
-
-</div>
-
-<!-- ── FOOTER ── -->
-<footer>
-  <div class="footer-left">
-    ©2025 解放. All rights reserved<br/>
-    Seoul, Republic of Korea
-  </div>
-  <img class="footer-logo" src="Logo.png" alt="解放"/>
-</footer>
+<img class="logo" src="Logo.png" alt="解放"/>
+<img class="book" src="work1.jpg" alt="나만의 카운슬러 공자"/>
+<p class="copy">©2025 解放. Seoul, KR</p>
 
 <script>
-// cursor
 const dot = document.getElementById('dot');
 document.addEventListener('mousemove', e => {
   dot.style.left = e.clientX + 'px';
   dot.style.top  = e.clientY + 'px';
-});
-document.querySelectorAll('.card').forEach(el => {
-  el.addEventListener('mouseenter', () => { dot.style.width='22px';dot.style.height='22px';dot.style.opacity='.45'; });
-  el.addEventListener('mouseleave', () => { dot.style.width='7px';dot.style.height='7px';dot.style.opacity='1'; });
-});
-
-// scroll reveal
-const io = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if(e.isIntersecting){
-      e.target.style.opacity='1';
-      e.target.style.transform='translateY(0)';
-    }
-  });
-},{threshold:.08});
-document.querySelectorAll('.card,.card-txt,.card-red').forEach(el => {
-  el.style.opacity='0';el.style.transform='translateY(14px)';
-  el.style.transition='opacity .6s ease, transform .6s cubic-bezier(.22,1,.36,1)';
-  io.observe(el);
 });
 </script>
 
