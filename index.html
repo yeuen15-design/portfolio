@@ -12,8 +12,8 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 
 html,body{
-  width:100%;height:100%;
-  overflow:hidden;
+  width:100%;
+  overflow-x:hidden;
 }
 
 .bg{
@@ -36,28 +36,45 @@ html,body{
   mix-blend-mode:multiply;
 }
 
-.book{
-  position:fixed;
-  left:48px;
-  bottom:60px;
-  width:clamp(160px, 18vw, 280px);
-  z-index:50;
-  filter:drop-shadow(0 12px 32px rgba(0,0,0,0.45));
-  animation:floatIn .9s cubic-bezier(.22,1,.36,1) both;
+/* 로고 아래부터 시작하는 그리드 wrapper */
+.main{
+  position:relative;
+  z-index:10;
+  padding-top:96px; /* 로고 높이 + 여백 */
+  padding-left:24px;
+  padding-right:24px;
+  padding-bottom:40px;
 }
 
-@keyframes floatIn{
-  from{opacity:0;transform:translateY(24px);}
-  to{opacity:1;transform:translateY(0);}
+/* masonry grid */
+.grid{
+  column-count:4;
+  column-gap:6px;
 }
+@media(max-width:1000px){.grid{column-count:3;}}
+@media(max-width:680px){.grid{column-count:2;}}
+
+.card{
+  break-inside:avoid;
+  margin-bottom:6px;
+  display:block;
+  overflow:hidden;
+  cursor:pointer;
+}
+.card img{
+  width:100%;height:auto;
+  display:block;
+  transition:transform .6s cubic-bezier(.22,1,.36,1), opacity .3s;
+}
+.card:hover img{transform:scale(1.03);opacity:.88;}
 
 .copy{
-  position:fixed;
-  bottom:24px;left:48px;
+  position:relative;z-index:10;
+  text-align:center;
+  padding:20px;
   font-family:'IBM Plex Mono',monospace;
   font-size:8px;letter-spacing:.18em;text-transform:uppercase;
-  color:rgba(255,255,255,.45);
-  z-index:100;
+  color:rgba(255,255,255,.4);
 }
 
 #dot{
@@ -75,7 +92,16 @@ html,body{
 <div class="bg"></div>
 
 <img class="logo" src="Logo.png" alt="解放"/>
-<img class="book" src="work1.jpg" alt="나만의 카운슬러 공자"/>
+
+<div class="main">
+  <div class="grid">
+    <div class="card">
+      <img src="work1.jpg" alt="나만의 카운슬러 공자"/>
+    </div>
+    <!-- 이미지 추가 시 여기에 .card 블록 추가 -->
+  </div>
+</div>
+
 <p class="copy">©2025 解放. Seoul, KR</p>
 
 <script>
