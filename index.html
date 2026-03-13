@@ -4,6 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>解放 — Portfolio</title>
+<link rel="icon" type="image/png" href="images/favicon.png"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500&family=IBM+Plex+Mono:wght@300;400&display=swap" rel="stylesheet"/>
@@ -119,12 +120,32 @@ body.panel-open .grid{column-count:3;}
 
 .resize-handle{
   position:absolute;top:0;left:0;
-  width:5px;height:100%;
+  width:12px;height:100%;
   cursor:ew-resize;
   background:transparent;
   z-index:10;
+  display:flex;align-items:center;justify-content:center;
 }
-.resize-handle:hover{background:rgba(212,39,10,.3);}
+.resize-handle::before{
+  content:'';
+  width:2px;height:48px;
+  background:rgba(255,255,255,.15);
+  border-radius:2px;
+  transition:background .2s, height .2s;
+}
+.resize-handle::after{
+  content:'';
+  position:absolute;
+  left:5px;top:50%;
+  transform:translateY(-50%);
+  width:2px;height:24px;
+  background:rgba(255,255,255,.08);
+  border-radius:2px;
+}
+.resize-handle:hover::before{
+  background:rgba(212,39,10,.7);
+  height:72px;
+}
 
 .panel-close{
   position:sticky;top:0;
