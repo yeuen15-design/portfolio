@@ -56,7 +56,9 @@ body.panel-open .main{
 @media(max-width:680px){.grid{column-count:2;}}
 
 /* 패널 열릴 때 컬럼 수 줄이기 */
-body.panel-open .grid{column-count:2;}
+body.panel-open .grid{column-count:3;}
+@media(max-width:1000px){body.panel-open .grid{column-count:2;}}
+@media(max-width:680px){body.panel-open .grid{column-count:1;}}
 
 .card{
   break-inside:avoid;
