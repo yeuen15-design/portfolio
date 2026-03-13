@@ -49,17 +49,9 @@ body.panel-open .main{
 }
 
 .grid{
-  column-count:4;
   column-gap:6px;
-  transition:column-count .4s;
+  transition:column-count .3s;
 }
-@media(max-width:1000px){.grid{column-count:3;}}
-@media(max-width:680px){.grid{column-count:2;}}
-
-/* 패널 열릴 때 컬럼 수 줄이기 */
-body.panel-open .grid{column-count:3;}
-@media(max-width:1000px){body.panel-open .grid{column-count:2;}}
-@media(max-width:680px){body.panel-open .grid{column-count:1;}}
 
 .card{
   break-inside:avoid;
@@ -218,9 +210,23 @@ body.panel-open .grid{column-count:3;}
 </div>
 
 <script>
-const panel     = document.getElementById('panel');
-const closeBtn  = document.getElementById('closeBtn');
-const handle    = document.getElementById('resizeHandle');
+const panel    = document.getElementById('panel');
+const closeBtn = document.getElementById('closeBtn');
+const handle   = document.getElementById('resizeHandle');
+const grid     = document.querySelector('.grid');
+
+// 썸네일 최소 너비 기준 (px) — 이 값으로 몇 열 들어갈지 계산
+const MIN_CARD_W = 200;
+
+function calcCols() {
+  const vw = window.innerWidth;
+  const panelOpen = document.body.classList.contains('panel-open');
+  const panelW = panelOpen ? panel.offsetWidth : 0;
+  const availW = vw - panelW - 48; // 좌우 패딩 24px씩
+  const cols = Math.max(1, Math.floor(availW / MIN_CARD_W));
+  // 최대 4열 제한
+  grid.style.columnCount = Math.min(cols, 4);
+}
 
 function openPanel(card) {
   document.getElementById('panelImg').src = card.dataset.img;
@@ -229,34 +235,32 @@ function openPanel(card) {
   document.getElementById('panelText').textContent  = card.dataset.text;
   panel.classList.add('open');
   document.body.classList.add('panel-open');
-  // CSS 변수에 현재 패널 너비 반영
   document.documentElement.style.setProperty('--panel-w', panel.offsetWidth + 'px');
   panel.scrollTop = 0;
+  calcCols();
 }
 
 function closePanel() {
   panel.classList.remove('open');
   document.body.classList.remove('panel-open');
+  calcCols();
 }
 
 document.querySelectorAll('.card').forEach(c => {
   c.addEventListener('click', () => openPanel(c));
 });
 closeBtn.addEventListener('click', closePanel);
-document.addEventListener('keydown', e => { if(e.key==='Escape') closePanel(); });
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closePanel(); });
+
+// 브라우저 리사이즈 대응
+window.addEventListener('resize', calcCols);
+
+// 초기 계산
+calcCols();
 
 // ── 드래그로 패널 너비 조절 ──
 let dragging = false;
 let startX, startW;
-const grid = document.querySelector('.grid');
-
-function updateGridCols(panelW) {
-  const vw = window.innerWidth;
-  const ratio = panelW / vw;
-  if (ratio > 0.4)      grid.style.columnCount = 1;
-  else if (ratio > 0.28) grid.style.columnCount = 2;
-  else                   grid.style.columnCount = 3;
-}
 
 handle.addEventListener('mousedown', e => {
   dragging = true;
@@ -267,17 +271,17 @@ handle.addEventListener('mousedown', e => {
 });
 
 document.addEventListener('mousemove', e => {
-  if(!dragging) return;
+  if (!dragging) return;
   const dx = startX - e.clientX;
   const maxW = window.innerWidth * 0.5;
   const newW = Math.min(Math.max(startW + dx, 280), maxW);
   panel.style.width = newW + 'px';
   document.documentElement.style.setProperty('--panel-w', newW + 'px');
-  updateGridCols(newW);
+  calcCols();
 });
 
 document.addEventListener('mouseup', () => {
-  if(!dragging) return;
+  if (!dragging) return;
   dragging = false;
   document.body.style.userSelect = '';
   document.body.style.cursor = '';
