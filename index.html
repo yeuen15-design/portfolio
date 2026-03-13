@@ -34,6 +34,12 @@ html,body{
   height:52px;width:auto;
   z-index:100;
   mix-blend-mode:multiply;
+  animation:spin 8s linear infinite;
+}
+
+@keyframes spin{
+  from{transform:rotate(0deg);}
+  to{transform:rotate(360deg);}
 }
 
 /* 로고 아래부터 시작하는 그리드 wrapper */
