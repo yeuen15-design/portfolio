@@ -52,14 +52,23 @@ body.panel-open .main{padding-right:calc(var(--panel-w) + 24px);}
 
 /* PNG 목업 카드 */
 .card-img{
+  background: var(--card-bg);
   break-inside:avoid;
   margin-bottom:40px;
   cursor:pointer;
   overflow:hidden;
   position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
 }
 .card-img img{
-  width:100%;height:auto;display:block;
+  width:100%;
+  height:auto;
+  max-height:340px;
+  object-fit:contain;
+  display:block;
   transition:transform .6s cubic-bezier(.22,1,.36,1), opacity .3s;
 }
 .card-img:hover img{transform:scale(1.02);opacity:.9;}
