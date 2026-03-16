@@ -71,9 +71,24 @@ body.panel-open .main{padding-right:calc(var(--panel-w) + 24px);}
   max-height:340px;
   object-fit:contain;
   display:block;
-  transition:transform .6s cubic-bezier(.22,1,.36,1), opacity .3s;
+  transition:transform .6s cubic-bezier(.22,1,.36,1);
 }
 .card-img:hover img{transform:scale(1.02);}
+
+/* Board 카드 — 배경 없이 이미지 그대로 */
+.card-img[data-cat="board"]{
+  background:none;
+  padding:0;
+  border-radius:12px;
+}
+.card-img[data-cat="board"] img{
+  width:100%;
+  height:auto;
+  max-height:none;
+  object-fit:cover;
+  border-radius:12px;
+  display:block;
+}
 
 .book-scene{perspective:900px;}
 
