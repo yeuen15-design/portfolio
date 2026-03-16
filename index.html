@@ -13,7 +13,7 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html,body{width:100%;overflow-x:hidden;}
 
-.bg{position:fixed;inset:0;background:#000;z-index:0;}
+.bg{position:fixed;inset:0;background:#fff;z-index:0;}
 
 .logo{position:fixed;top:22px;left:24px;height:52px;width:auto;z-index:200;animation:spin 8s linear infinite;}
 @keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
@@ -21,9 +21,9 @@ html,body{width:100%;overflow-x:hidden;}
 .nav-right{position:fixed;top:20px;right:24px;display:flex;align-items:center;gap:20px;z-index:200;}
 .insta{opacity:.85;transition:opacity .2s;}
 .insta:hover{opacity:1;}
-.insta svg{width:22px;height:22px;fill:white;display:block;}
-.about{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:400;letter-spacing:.18em;text-transform:uppercase;color:#fff;text-decoration:none;transition:opacity .2s;}
-.about:hover{opacity:.6;}
+.insta svg{width:22px;height:22px;fill:#111;display:block;}
+.about{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:400;letter-spacing:.18em;text-transform:uppercase;color:#111;text-decoration:none;transition:opacity .2s;}
+.about:hover{opacity:.5;}
 
 .main{position:relative;z-index:10;padding:96px 24px 40px;transition:padding-right .5s cubic-bezier(.22,1,.36,1);}
 body.panel-open .main{padding-right:calc(var(--panel-w) + 24px);}
@@ -75,7 +75,7 @@ body.panel-open .main{padding-right:calc(var(--panel-w) + 24px);}
 .b-top{position:absolute;top:0;left:0;transform-origin:50% 0%;}
 
 /* 푸터 */
-.copy{position:relative;z-index:10;text-align:center;padding:20px;font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.4);}
+.copy{position:relative;z-index:10;text-align:center;padding:20px;font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:rgba(0,0,0,.3);}
 
 /* ── 슬라이드 패널 ── */
 :root{--panel-w:480px;}
@@ -87,7 +87,7 @@ body.panel-open .main{padding-right:calc(var(--panel-w) + 24px);}
 .resize-handle::before{content:'';position:absolute;left:6px;top:50%;transform:translateY(-50%);width:2px;height:40px;border-radius:2px;background:rgba(255,255,255,.2);transition:background .2s,height .2s;}
 .resize-handle:hover::before{background:rgba(255,255,255,.7);height:60px;}
 .resize-handle::after{content:'⟺';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) translateY(36px);font-size:10px;color:rgba(255,255,255,0);transition:color .2s;white-space:nowrap;font-family:'IBM Plex Mono',monospace;letter-spacing:.1em;}
-.resize-handle:hover::after{color:rgba(255,255,255,.4);}
+.resize-handle:hover::after{color:rgba(0,0,0,.3);}
 
 .panel-close{position:sticky;top:0;display:flex;justify-content:flex-end;padding:20px 24px 0;background:#111;z-index:1;}
 .panel-close button{background:none;border:none;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:18px;line-height:1;color:rgba(255,255,255,.6);transition:color .2s;padding:4px;}
@@ -196,7 +196,8 @@ body.panel-open .main{padding-right:calc(var(--panel-w) + 24px);}
 </div>
 
 <script>
-const BOOK_W = 160;
+const BOOK_W = 220;
+const BOOK_RATIO = 4/3;
 
 function buildBook(card) {
   const cover     = card.dataset.cover;
@@ -210,69 +211,63 @@ function buildBook(card) {
   const book = document.createElement('div');
   book.className = 'book';
 
-  // 표지 이미지 비율 계산 후 렌더
-  const img = new Image();
-  img.onload = () => {
-    const ratio = img.naturalHeight / img.naturalWidth;
-    const bookH = Math.round(BOOK_W * ratio);
+  const bookH = Math.round(BOOK_W * BOOK_RATIO);
 
-    book.style.width  = BOOK_W + 'px';
-    book.style.height = bookH + 'px';
+  book.style.width  = BOOK_W + 'px';
+  book.style.height = bookH + 'px';
 
-    // 앞면
-    const front = document.createElement('div');
-    front.className = 'b-front';
-    front.style.width  = BOOK_W + 'px';
-    front.style.height = bookH + 'px';
-    front.style.transform = 'translateZ(' + (thickness/2) + 'px)';
-    const coverImg = document.createElement('img');
-    coverImg.src = cover;
-    coverImg.alt = card.dataset.title || '';
-    const shine = document.createElement('div');
-    shine.className = 'b-shine';
-    front.appendChild(coverImg);
-    front.appendChild(shine);
+  // 앞면
+  const front = document.createElement('div');
+  front.className = 'b-front';
+  front.style.width  = BOOK_W + 'px';
+  front.style.height = bookH + 'px';
+  front.style.transform = 'translateZ(' + (thickness/2) + 'px)';
+  const coverImg = document.createElement('img');
+  coverImg.src = cover;
+  coverImg.alt = card.dataset.title || '';
+  const shine = document.createElement('div');
+  shine.className = 'b-shine';
+  front.appendChild(coverImg);
+  front.appendChild(shine);
 
-    // 책등
-    const spineEl = document.createElement('div');
-    spineEl.className = 'b-spine';
-    spineEl.style.width  = thickness + 'px';
-    spineEl.style.height = bookH + 'px';
-    spineEl.style.transform = 'translateZ(' + (thickness/2) + 'px) translateX(-' + thickness + 'px) rotateY(-90deg)';
-    spineEl.style.transformOrigin = '100% 50%';
+  // 책등
+  const spineEl = document.createElement('div');
+  spineEl.className = 'b-spine';
+  spineEl.style.width  = thickness + 'px';
+  spineEl.style.height = bookH + 'px';
+  spineEl.style.transform = 'translateZ(' + (thickness/2) + 'px) translateX(-' + thickness + 'px) rotateY(-90deg)';
+  spineEl.style.transformOrigin = '100% 50%';
 
-    const spineColorEl = document.createElement('div');
-    spineColorEl.className = 'b-spine-color';
-    spineColorEl.style.background = spineColor;
-    spineEl.appendChild(spineColorEl);
+  const spineColorEl = document.createElement('div');
+  spineColorEl.className = 'b-spine-color';
+  spineColorEl.style.background = spineColor;
+  spineEl.appendChild(spineColorEl);
 
-    if (spine) {
-      const spineImg = document.createElement('img');
-      spineImg.src = spine;
-      spineImg.style.cssText = 'position:absolute;inset:0;width:'+thickness+'px;height:'+bookH+'px;object-fit:fill;z-index:1;';
-      spineEl.appendChild(spineImg);
-    }
-    const spineShade = document.createElement('div');
-    spineShade.className = 'b-spine-shade';
-    spineEl.appendChild(spineShade);
+  if (spine) {
+    const spineImg = document.createElement('img');
+    spineImg.src = spine;
+    spineImg.style.cssText = 'position:absolute;inset:0;width:'+thickness+'px;height:'+bookH+'px;object-fit:fill;z-index:1;';
+    spineEl.appendChild(spineImg);
+  }
+  const spineShade = document.createElement('div');
+  spineShade.className = 'b-spine-shade';
+  spineEl.appendChild(spineShade);
 
-    // 윗면
-    const top = document.createElement('div');
-    top.className = 'b-top';
-    top.style.width  = BOOK_W + 'px';
-    top.style.height = thickness + 'px';
-    top.style.background = spineColor;
-    top.style.transform = 'translateZ(' + (thickness/2) + 'px) rotateX(90deg) translateY(-' + thickness + 'px)';
-    top.style.transformOrigin = '50% 0%';
+  // 윗면
+  const top = document.createElement('div');
+  top.className = 'b-top';
+  top.style.width  = BOOK_W + 'px';
+  top.style.height = thickness + 'px';
+  top.style.background = spineColor;
+  top.style.transform = 'translateZ(' + (thickness/2) + 'px) rotateX(90deg) translateY(-' + thickness + 'px)';
+  top.style.transformOrigin = '50% 0%';
 
-    book.appendChild(front);
-    book.appendChild(spineEl);
-    book.appendChild(top);
-    scene.appendChild(book);
-    card.innerHTML = '';
-    card.appendChild(scene);
-  };
-  img.src = cover;
+  book.appendChild(front);
+  book.appendChild(spineEl);
+  book.appendChild(top);
+  scene.appendChild(book);
+  card.innerHTML = '';
+  card.appendChild(scene);
 }
 
 // 모든 카드에 3D 목업 생성
