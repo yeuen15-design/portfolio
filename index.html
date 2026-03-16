@@ -31,18 +31,21 @@ html,body{width:100%;overflow-x:hidden;}
 
 /* 인스타 */
 .insta{
-  position:fixed;top:26px;right:24px;
+  position:fixed;top:50%;right:24px;
+  transform:translateY(-50%);
   z-index:200;opacity:.85;transition:opacity .2s;
 }
 .insta:hover{opacity:1;}
-.insta svg{width:24px;height:24px;fill:white;}
+.insta svg{width:24px;height:24px;fill:white;display:block;}
 
 /* About 링크 */
 .about{
-  position:fixed;top:26px;right:60px;
+  position:fixed;top:50%;right:60px;
+  transform:translateY(-50%);
   z-index:200;
   font-family:'IBM Plex Mono',monospace;
-  font-size:9px;letter-spacing:.18em;text-transform:uppercase;
+  font-size:13px;font-weight:500;
+  letter-spacing:.18em;text-transform:uppercase;
   color:rgba(255,255,255,.85);
   text-decoration:none;
   transition:color .2s;
