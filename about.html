@@ -27,20 +27,21 @@ nav{
   z-index:100;
 }
 .nav-logo{
-  height:36px;width:auto;display:block;
+  position:fixed;top:22px;left:24px;
+  height:52px;width:auto;display:block;
   animation:spin 8s linear infinite;
+  z-index:200;
 }
 @keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
 
-.nav-right{display:flex;align-items:center;gap:20px;}
-.nav-back{
-  font-family:'IBM Plex Mono',monospace;
-  font-size:11px;letter-spacing:.18em;text-transform:uppercase;
-  color:#111;text-decoration:none;transition:color .2s;
+nav{
+  position:fixed;top:0;left:0;right:0;
+  padding:0;
+  z-index:100;
 }
-.nav-back:hover{color:#d4270a;}
-.nav-insta svg{width:20px;height:20px;fill:#111;display:block;}
-.nav-insta:hover{opacity:.5;}
+.nav-right{display:none;}
+.nav-back{display:none;}
+.nav-insta{display:none;}
 
 /* ── WRAP ── */
 .wrap{
