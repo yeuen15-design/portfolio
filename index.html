@@ -13,7 +13,7 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html,body{width:100%;overflow-x:hidden;}
 
-.bg{position:fixed;inset:0;background:#fff;z-index:0;transition:background 0.6s ease;}
+.bg{position:fixed;inset:0;background:#fff;z-index:0;transition:background 0.6s ease, opacity 0.6s ease;background-size:cover;background-position:center;}
 
 .logo{position:fixed;top:22px;left:24px;height:52px;width:auto;z-index:200;animation:spin 8s linear infinite;}
 @keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
@@ -177,6 +177,7 @@ body.panel-open .main{padding-right:calc(var(--panel-w) + 24px);}
   <a href="#" data-filter="editorial">Editorial</a>
   <a href="#" data-filter="graphic">Graphic</a>
   <a href="#" data-filter="identity">Identity</a>
+  <a href="#" data-filter="board">Board</a>
 </div>
 
 <div class="main">
@@ -471,26 +472,33 @@ document.querySelectorAll('.card').forEach(card => buildBook(card));
 
 // ── 카테고리별 색상 ──
 const catColors = {
-  all:       { bg: '#ffffff', card: '#e3e3e3', nav: '#111' },
-  editorial: { bg: '#f5f0e8', card: '#ede8df', nav: '#111' },
-  graphic:   { bg: '#0f0f0f', card: '#1e1e1e', nav: '#fff' },
-  identity:  { bg: '#e8f0f5', card: '#dce8f0', nav: '#111' },
+  all:       { bg: '#ffffff', card: '#f0f0f0', nav: '#111', bgImg: '' },
+  editorial: { bg: '#ffffff', card: '#f0f0f0', nav: '#111', bgImg: '' },
+  graphic:   { bg: '#ffffff', card: '#f0f0f0', nav: '#111', bgImg: '' },
+  identity:  { bg: '#ffffff', card: '#f0f0f0', nav: '#111', bgImg: '' },
+  board:     { bg: '#000',    card: 'transparent', nav: '#fff', bgImg: 'images/hero.jpg' },
 };
 
 function applyColor(filter) {
   const c = catColors[filter] || catColors.all;
-  document.querySelector('.bg').style.background = c.bg;
+  const bgEl = document.querySelector('.bg');
+  if(c.bgImg){
+    bgEl.style.backgroundImage = `url('${c.bgImg}')`;
+    bgEl.style.backgroundSize = 'cover';
+    bgEl.style.backgroundPosition = 'center';
+    bgEl.style.background = c.bg;
+  } else {
+    bgEl.style.backgroundImage = 'none';
+    bgEl.style.background = c.bg;
+  }
   document.documentElement.style.setProperty('--card-bg', c.card);
-  // 네비 텍스트 색상
   document.querySelectorAll('.cat-nav a').forEach(b => {
-    b.style.color = b.classList.contains('active') ? c.nav : c.nav + '60';
+    b.style.color = c.nav === '#fff' ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.35)';
   });
   document.querySelector('.cat-nav a.active').style.color = c.nav;
   document.querySelector('.cat-nav a.active').style.borderBottomColor = c.nav;
-  // about / insta 색상
   document.querySelector('.about').style.color = c.nav;
   document.querySelector('.insta svg').style.fill = c.nav;
-  // copy 텍스트
   const copy = document.querySelector('.copy');
   if(copy) copy.style.color = c.nav === '#fff' ? 'rgba(255,255,255,.3)' : 'rgba(0,0,0,.3)';
 }
