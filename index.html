@@ -50,6 +50,20 @@ body.panel-open .main{padding-right:calc(var(--panel-w) + 24px);}
   justify-content:center;
 }
 
+/* PNG 목업 카드 */
+.card-img{
+  break-inside:avoid;
+  margin-bottom:40px;
+  cursor:pointer;
+  overflow:hidden;
+  position:relative;
+}
+.card-img img{
+  width:100%;height:auto;display:block;
+  transition:transform .6s cubic-bezier(.22,1,.36,1), opacity .3s;
+}
+.card-img:hover img{transform:scale(1.02);opacity:.9;}
+
 .book-scene{perspective:900px;}
 
 .book{
@@ -224,6 +238,86 @@ body.panel-open .main{padding-right:calc(var(--panel-w) + 24px);}
   data-text="">
 </div>
 
+    <div class="card-img"
+      data-title="관계×사회"
+      data-meta="북디자인 · 2023"
+      data-detail="images/mockup-relation.png"
+      data-text="">
+      <img src="images/mockup-relation.png" alt="관계×사회"/>
+    </div>
+
+    <div class="card-img"
+      data-title="당신의 기억이 모여"
+      data-meta="북디자인 · 2023"
+      data-detail="images/mockup-memory.png"
+      data-text="">
+      <img src="images/mockup-memory.png" alt="당신의 기억이 모여"/>
+    </div>
+
+    <div class="card-img"
+      data-title="사랑의 기술"
+      data-meta="북디자인 · 2023"
+      data-detail="images/mockup-art-of-love.png"
+      data-text="">
+      <img src="images/mockup-art-of-love.png" alt="사랑의 기술"/>
+    </div>
+
+    <div class="card-img"
+      data-title="용의자 X의 헌신"
+      data-meta="북디자인 · 2023"
+      data-detail="images/mockup-suspect.png"
+      data-text="">
+      <img src="images/mockup-suspect.png" alt="용의자 X의 헌신"/>
+    </div>
+
+    <div class="card-img"
+      data-title="인터스텔라"
+      data-meta="북디자인 · 2023"
+      data-detail="images/mockup-interstellar.png"
+      data-text="">
+      <img src="images/mockup-interstellar.png" alt="인터스텔라"/>
+    </div>
+
+    <div class="card-img"
+      data-title="젊은 ADHD의 슬픔"
+      data-meta="북디자인 · 2023"
+      data-detail="images/mockup-young-adhd.png"
+      data-text="">
+      <img src="images/mockup-young-adhd.png" alt="젊은 ADHD의 슬픔"/>
+    </div>
+
+    <div class="card-img"
+      data-title="창고와 라디오"
+      data-meta="북디자인 · 2023"
+      data-detail="images/mockup-warehouse.png"
+      data-text="">
+      <img src="images/mockup-warehouse.png" alt="창고와 라디오"/>
+    </div>
+
+    <div class="card-img"
+      data-title="하룻밤에 읽는 세계사"
+      data-meta="북디자인 · 2023"
+      data-detail="images/mockup-onenight-history.png"
+      data-text="">
+      <img src="images/mockup-onenight-history.png" alt="하룻밤에 읽는 세계사"/>
+    </div>
+
+    <div class="card-img"
+      data-title="하룻밤에 읽는 성서"
+      data-meta="북디자인 · 2023"
+      data-detail="images/mockup-onenight-bible.png"
+      data-text="">
+      <img src="images/mockup-onenight-bible.png" alt="하룻밤에 읽는 성서"/>
+    </div>
+
+    <div class="card-img"
+      data-title="하룻밤에 읽는 과학사"
+      data-meta="북디자인 · 2023"
+      data-detail="images/mockup-onenight-science.png"
+      data-text="">
+      <img src="images/mockup-onenight-science.png" alt="하룻밤에 읽는 과학사"/>
+    </div>
+
   </div>
 </div>
 
@@ -358,7 +452,7 @@ function closePanel() {
 
 // 카드 클릭 — 이벤트 위임
 document.getElementById('grid').addEventListener('click', e => {
-  const card = e.target.closest('.card');
+  const card = e.target.closest('.card, .card-img');
   if (card) openPanel(card);
 });
 
