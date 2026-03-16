@@ -113,7 +113,7 @@ body.panel-open .main{padding-right:calc(var(--panel-w) + 24px);}
 /* ── 슬라이드 패널 ── */
 :root{
   --panel-w: 480px;
-  --card-bg: #f0ebe0; /* ← 여기서 카드 배경색 변경 */
+  --card-bg: #000000; /* ← 여기서 카드 배경색 변경 */
 }
 .panel{position:fixed;top:0;right:0;width:var(--panel-w);height:100vh;background:#fff;z-index:400;transform:translateX(100%);transition:transform .5s cubic-bezier(.22,1,.36,1);overflow-y:auto;display:flex;flex-direction:column;min-width:280px;max-width:50vw;}
 .panel.open{transform:translateX(0);}
@@ -166,7 +166,7 @@ body.panel-open .main{padding-right:calc(var(--panel-w) + 24px);}
       data-thickness="22"
       data-title="나만의 카운슬러 공자"
       data-meta="출판 · 2025"
-      data-detail="images/cover-confucius.jpg"
+      data-detail="images/detail-confucius-1.jpg,images/detail-confucius-2.jpg,images/detail-confucius-3.jpg,images/detail-confucius-4.jpg,images/detail-confucius-5.jpg,images/detail-confucius-6.jpg"
       data-text="2,500년을 넘어 전해진 공자의 지혜를 오늘의 언어로 재해석한 책. 삶의 방향을 잃었을 때 단단한 기준이 되어주는 철학 에세이다. 흔들리는 마음을 붙잡는 문장들을 한 권에 담았다. 독자 스스로 자신만의 카운슬러를 찾아가는 여정을 그린다. 표지 디자인은 고요함과 긴장감을 동시에 담아내는 방향으로 작업했다.">
     </div>
 
@@ -232,7 +232,7 @@ body.panel-open .main{padding-right:calc(var(--panel-w) + 24px);}
   data-thickness="28"
   data-title="십자가 아래로"
   data-meta="출판 · 2023"
-  data-detail="images/cover-cross.jpg"
+  data-detail="images/detail-cross-1.jpg,images/detail-cross-2.jpg,images/detail-cross-3.jpg,images/detail-cross-4.jpg"
   data-text="">
 </div>
 
@@ -246,6 +246,17 @@ body.panel-open .main{padding-right:calc(var(--panel-w) + 24px);}
   data-detail="images/cover-summer.jpg"
   data-text="">
 </div>
+
+    <div class="card"
+      data-cover="images/cover-judo.jpg"
+      data-spine="images/spine-judo.jpg"
+      data-spine-color="#3a6ea8"
+      data-thickness="28"
+      data-title="주기도"
+      data-meta="출판 · 2023"
+      data-detail="images/detail-judo-1.jpg,images/detail-judo-2.jpg"
+      data-text="">
+    </div>
 
     <div class="card-img"
       data-title="관계×사회"
