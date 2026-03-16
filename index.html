@@ -17,7 +17,7 @@ html,body{width:100%;overflow-x:hidden;}
 /* 배경 */
 .bg{
   position:fixed;inset:0;
-  background:url('images/hero.jpg') center/cover no-repeat;
+  background:#000;
   z-index:0;
 }
 
@@ -29,20 +29,17 @@ html,body{width:100%;overflow-x:hidden;}
 }
 @keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
 
-/* 인스타 */
-.insta{
-  position:fixed;top:50%;right:24px;
-  transform:translateY(-50%);
-  z-index:200;opacity:.85;transition:opacity .2s;
-}
-.insta:hover{opacity:1;}
-.insta svg{width:24px;height:24px;fill:white;display:block;}
-
-/* About 링크 */
-.about{
-  position:fixed;top:50%;right:60px;
-  transform:translateY(-50%);
+/* 인스타 + About 묶음 */
+.nav-right{
+  position:fixed;top:0;right:24px;
+  height:76px;
+  display:flex;align-items:center;gap:20px;
   z-index:200;
+}
+.insta{opacity:.85;transition:opacity .2s;}
+.insta:hover{opacity:1;}
+.insta svg{width:22px;height:22px;fill:white;display:block;}
+.about{
   font-family:'IBM Plex Mono',monospace;
   font-size:13px;font-weight:500;
   letter-spacing:.18em;text-transform:uppercase;
