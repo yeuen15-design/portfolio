@@ -110,10 +110,32 @@ body.panel-open .main{padding-right:calc(var(--panel-w) + 24px);}
 /* 푸터 */
 .copy{position:relative;z-index:10;text-align:center;padding:20px;font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:rgba(0,0,0,.3);}
 
-/* ── 슬라이드 패널 ── */
+/* ── 카테고리 메뉴 ── */
+.cat-nav{
+  position:fixed;top:0;left:0;right:0;
+  height:52px;
+  display:flex;align-items:center;
+  padding:0 24px;
+  z-index:150;
+  pointer-events:none;
+  justify-content:center;
+}
+.cat-nav a{
+  pointer-events:auto;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(0,0,0,.35);text-decoration:none;
+  padding:6px 16px;
+  transition:color .2s;
+}
+.cat-nav a:hover{color:#111;}
+.cat-nav a.active{color:#111;border-bottom:1px solid #111;}
+
+/* 카드 숨김 */
+.card.hidden, .card-img.hidden{display:none;}
 :root{
   --panel-w: 480px;
-  --card-bg: #dedede; /* ← 여기서 카드 배경색 변경 */
+  --card-bg: #000000; /* ← 여기서 카드 배경색 변경 */
 }
 .panel{position:fixed;top:0;right:0;width:var(--panel-w);height:100vh;background:#fff;z-index:400;transform:translateX(100%);transition:transform .5s cubic-bezier(.22,1,.36,1);overflow-y:auto;display:flex;flex-direction:column;min-width:280px;max-width:50vw;}
 .panel.open{transform:translateX(0);}
@@ -147,6 +169,13 @@ body.panel-open .main{padding-right:calc(var(--panel-w) + 24px);}
   </a>
 </div>
 
+<div class="cat-nav">
+  <a href="#" class="active" data-filter="all">All</a>
+  <a href="#" data-filter="editorial">Editorial</a>
+  <a href="#" data-filter="graphic">Graphic</a>
+  <a href="#" data-filter="identity">Identity</a>
+</div>
+
 <div class="main">
   <div class="grid" id="grid">
 
@@ -159,7 +188,7 @@ body.panel-open .main{padding-right:calc(var(--panel-w) + 24px);}
       data-detail : 상세패널에 보여줄 큰 이미지 (없으면 cover 사용)
     -->
 
-    <div class="card"
+    <div class="card" data-cat="editorial"
       data-cover="images/cover-confucius.jpg"
       data-spine="images/spine-confucius.jpg"
       data-spine-color="#1a2a4a"
@@ -170,7 +199,7 @@ body.panel-open .main{padding-right:calc(var(--panel-w) + 24px);}
       data-text="2,500년을 넘어 전해진 공자의 지혜를 오늘의 언어로 재해석한 책. 삶의 방향을 잃었을 때 단단한 기준이 되어주는 철학 에세이다. 흔들리는 마음을 붙잡는 문장들을 한 권에 담았다. 독자 스스로 자신만의 카운슬러를 찾아가는 여정을 그린다. 표지 디자인은 고요함과 긴장감을 동시에 담아내는 방향으로 작업했다.">
     </div>
 
-    <div class="card"
+    <div class="card" data-cat="editorial"
       data-cover="images/cover-prayer-daughter.jpg"
       data-spine="images/spine-prayer-daughter.jpg"
       data-spine-color="#c0392b"
@@ -181,7 +210,7 @@ body.panel-open .main{padding-right:calc(var(--panel-w) + 24px);}
       data-text="기도의 언어로 딸에게 전하는 사랑. 바쁜 하루 속 단 1분, 딸을 위한 진심 어린 기도를 담았다. 짧지만 깊은 문장들이 부모의 마음을 대신 전한다. 기도가 습관이 되는 순간을 위한 작은 책이다. 표지는 따뜻한 색감으로 사랑의 온도를 담아냈다.">
     </div>
 
-    <div class="card"
+    <div class="card" data-cat="editorial"
       data-cover="images/cover-prayer-son.jpg"
       data-spine="images/spine-prayer-son.jpg"
       data-spine-color="#3aafa9"
@@ -192,7 +221,7 @@ body.panel-open .main{padding-right:calc(var(--panel-w) + 24px);}
       data-text="아들을 향한 부모의 마음을 기도로 엮었다. 하루 1분, 아이의 길을 주께 맡기는 시간을 담은 책이다. 간결하고 진실된 기도문이 마음 깊이 울린다. 성장하는 아이 곁에 두고 싶은 기도 동반자다. 표지의 생동감 있는 색감이 아이의 가능성을 상징한다.">
     </div>
 
-    <div class="card"
+    <div class="card" data-cat="editorial"
       data-cover="images/cover-prayer-walk.jpg"
       data-spine="images/spine-prayer-walk.jpg"
       data-spine-color="#c0452b"
@@ -203,7 +232,7 @@ body.panel-open .main{padding-right:calc(var(--panel-w) + 24px);}
       data-text="매일의 걸음을 주님과 함께하는 기도 습관을 위한 책. 하루 1분의 짧은 기도가 삶의 방향을 바꾼다는 믿음을 담았다. 단순하고 정직한 문장으로 기도의 본질을 전한다. 신앙의 일상화를 꿈꾸는 이들을 위한 동반자다. 절제된 표지 디자인이 묵상의 분위기를 만들어낸다.">
     </div>
 
-    <div class="card"
+    <div class="card" data-cat="editorial"
   data-cover="images/cover-autumn.jpg"
   data-spine="images/spine-autumn.jpg"
   data-spine-color="#e8560a"
@@ -214,7 +243,7 @@ body.panel-open .main{padding-right:calc(var(--panel-w) + 24px);}
   data-text="">
 </div>
 
-<div class="card"
+<div class="card" data-cat="editorial"
   data-cover="images/cover-david.jpg"
   data-spine="images/spine-david.jpg"
   data-spine-color="#b0b0a8"
@@ -225,7 +254,7 @@ body.panel-open .main{padding-right:calc(var(--panel-w) + 24px);}
   data-text="">
 </div>
 
-<div class="card"
+<div class="card" data-cat="editorial"
   data-cover="images/cover-cross.jpg"
   data-spine="images/spine-cross.jpg"
   data-spine-color="#f8f4f0"
@@ -236,7 +265,7 @@ body.panel-open .main{padding-right:calc(var(--panel-w) + 24px);}
   data-text="">
 </div>
 
-<div class="card"
+<div class="card" data-cat="editorial"
   data-cover="images/cover-summer.jpg"
   data-spine="images/spine-summer.jpg"
   data-spine-color="#ff1e8c"
@@ -247,7 +276,7 @@ body.panel-open .main{padding-right:calc(var(--panel-w) + 24px);}
   data-text="">
 </div>
 
-    <div class="card"
+    <div class="card" data-cat="editorial"
       data-cover="images/cover-judo.jpg"
       data-spine="images/spine-judo.jpg"
       data-spine-color="#3a6ea8"
@@ -258,7 +287,7 @@ body.panel-open .main{padding-right:calc(var(--panel-w) + 24px);}
       data-text="">
     </div>
 
-    <div class="card-img"
+    <div class="card-img" data-cat="editorial"
       data-title="관계×사회"
       data-meta="북디자인 · 2023"
       data-detail="images/mockup-relation.png"
@@ -266,7 +295,7 @@ body.panel-open .main{padding-right:calc(var(--panel-w) + 24px);}
       <img src="images/mockup-relation.png" alt="관계×사회"/>
     </div>
 
-    <div class="card-img"
+    <div class="card-img" data-cat="editorial"
       data-title="당신의 기억이 모여"
       data-meta="북디자인 · 2023"
       data-detail="images/mockup-memory.png"
@@ -274,7 +303,7 @@ body.panel-open .main{padding-right:calc(var(--panel-w) + 24px);}
       <img src="images/mockup-memory.png" alt="당신의 기억이 모여"/>
     </div>
 
-    <div class="card-img"
+    <div class="card-img" data-cat="editorial"
       data-title="사랑의 기술"
       data-meta="북디자인 · 2023"
       data-detail="images/mockup-art-of-love.png"
@@ -282,7 +311,7 @@ body.panel-open .main{padding-right:calc(var(--panel-w) + 24px);}
       <img src="images/mockup-art-of-love.png" alt="사랑의 기술"/>
     </div>
 
-    <div class="card-img"
+    <div class="card-img" data-cat="editorial"
       data-title="용의자 X의 헌신"
       data-meta="북디자인 · 2023"
       data-detail="images/mockup-suspect.png"
@@ -290,7 +319,7 @@ body.panel-open .main{padding-right:calc(var(--panel-w) + 24px);}
       <img src="images/mockup-suspect.png" alt="용의자 X의 헌신"/>
     </div>
 
-    <div class="card-img"
+    <div class="card-img" data-cat="editorial"
       data-title="인터스텔라"
       data-meta="북디자인 · 2023"
       data-detail="images/mockup-interstellar.png"
@@ -298,7 +327,7 @@ body.panel-open .main{padding-right:calc(var(--panel-w) + 24px);}
       <img src="images/mockup-interstellar.png" alt="인터스텔라"/>
     </div>
 
-    <div class="card-img"
+    <div class="card-img" data-cat="editorial"
       data-title="젊은 ADHD의 슬픔"
       data-meta="북디자인 · 2023"
       data-detail="images/mockup-young-adhd.png"
@@ -306,7 +335,7 @@ body.panel-open .main{padding-right:calc(var(--panel-w) + 24px);}
       <img src="images/mockup-young-adhd.png" alt="젊은 ADHD의 슬픔"/>
     </div>
 
-    <div class="card-img"
+    <div class="card-img" data-cat="editorial"
       data-title="창고와 라디오"
       data-meta="북디자인 · 2023"
       data-detail="images/mockup-warehouse.png"
@@ -314,7 +343,7 @@ body.panel-open .main{padding-right:calc(var(--panel-w) + 24px);}
       <img src="images/mockup-warehouse.png" alt="창고와 라디오"/>
     </div>
 
-    <div class="card-img"
+    <div class="card-img" data-cat="editorial"
       data-title="하룻밤에 읽는 세계사"
       data-meta="북디자인 · 2023"
       data-detail="images/mockup-onenight-history.png"
@@ -322,7 +351,7 @@ body.panel-open .main{padding-right:calc(var(--panel-w) + 24px);}
       <img src="images/mockup-onenight-history.png" alt="하룻밤에 읽는 세계사"/>
     </div>
 
-    <div class="card-img"
+    <div class="card-img" data-cat="editorial"
       data-title="하룻밤에 읽는 성서"
       data-meta="북디자인 · 2023"
       data-detail="images/mockup-onenight-bible.png"
@@ -330,7 +359,7 @@ body.panel-open .main{padding-right:calc(var(--panel-w) + 24px);}
       <img src="images/mockup-onenight-bible.png" alt="하룻밤에 읽는 성서"/>
     </div>
 
-    <div class="card-img"
+    <div class="card-img" data-cat="editorial"
       data-title="하룻밤에 읽는 과학사"
       data-meta="북디자인 · 2023"
       data-detail="images/mockup-onenight-science.png"
@@ -436,6 +465,24 @@ function buildBook(card) {
 
 // 모든 카드에 3D 목업 생성
 document.querySelectorAll('.card').forEach(card => buildBook(card));
+
+// ── 카테고리 필터 ──
+document.querySelectorAll('.cat-nav a').forEach(btn => {
+  btn.addEventListener('click', e => {
+    e.preventDefault();
+    const filter = btn.dataset.filter;
+    document.querySelectorAll('.cat-nav a').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.card, .card-img').forEach(card => {
+      if(filter === 'all' || card.dataset.cat === filter){
+        card.classList.remove('hidden');
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+    calcCols();
+  });
+});
 
 // ── 패널 ──
 const panel    = document.getElementById('panel');
