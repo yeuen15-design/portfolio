@@ -347,7 +347,8 @@ body.panel-open .main{padding-right:calc(var(--panel-w) + 24px);}
 <div class="panel" id="panel">
   <div class="resize-handle" id="resizeHandle"></div>
   <div class="panel-close"><button id="closeBtn">✕</button></div>
-  <img class="panel-img" id="panelImg" src="" alt=""/>
+  <div id="panelImgs"></div>
+  <img class="panel-img" id="panelImg" src="" alt="" style="display:none;"/>
   <div class="panel-body">
     <p class="panel-title" id="panelTitle"></p>
     <p class="panel-meta" id="panelMeta"></p>
@@ -453,7 +454,15 @@ function calcCols() {
 }
 
 function openPanel(card) {
-  document.getElementById('panelImg').src = card.dataset.detail || card.dataset.cover;
+  const details = (card.dataset.detail || card.dataset.cover || '').split(',').map(s=>s.trim()).filter(Boolean);
+  const container = document.getElementById('panelImgs');
+  container.innerHTML = '';
+  details.forEach(src => {
+    const img = document.createElement('img');
+    img.src = src;
+    img.style.cssText = 'width:calc(100% - 48px);height:auto;display:block;margin:16px 24px 0;';
+    container.appendChild(img);
+  });
   document.getElementById('panelTitle').textContent = card.dataset.title;
   document.getElementById('panelMeta').textContent  = card.dataset.meta;
   document.getElementById('panelText').textContent  = card.dataset.text;
