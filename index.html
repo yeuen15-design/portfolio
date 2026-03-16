@@ -11,171 +11,92 @@
 
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-
 html,body{width:100%;overflow-x:hidden;}
 
-/* 배경 */
-.bg{
-  position:fixed;inset:0;
-  background:#ffffff;
-  z-index:0;
-}
+.bg{position:fixed;inset:0;background:#000;z-index:0;}
 
-/* 로고 */
-.logo{
-  position:fixed;top:22px;left:24px;
-  height:52px;width:auto;z-index:200;
-  animation:spin 8s linear infinite;
-}
+.logo{position:fixed;top:22px;left:24px;height:52px;width:auto;z-index:200;animation:spin 8s linear infinite;}
 @keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
 
-/* 인스타 + About 묶음 */
-.nav-right{
-  position:fixed;top:20px;right:24px;
-  display:flex;align-items:center;gap:20px;
-  z-index:200;
-}
+.nav-right{position:fixed;top:20px;right:24px;display:flex;align-items:center;gap:20px;z-index:200;}
 .insta{opacity:.85;transition:opacity .2s;}
 .insta:hover{opacity:1;}
-.insta svg{width:22px;height:22px;fill:rgb(0, 0, 0);display:block;}
-.about{
-  font-family:'IBM Plex Mono',monospace;
-  font-size:11px;font-weight:400;
-  letter-spacing:.18em;text-transform:uppercase;
-  color:#000000;
-  text-decoration:none;
-  transition:opacity .2s;
-}
+.insta svg{width:22px;height:22px;fill:white;display:block;}
+.about{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:400;letter-spacing:.18em;text-transform:uppercase;color:#fff;text-decoration:none;transition:opacity .2s;}
 .about:hover{opacity:.6;}
-.main{
-  position:relative;z-index:10;
-  padding:96px 24px 40px;
-  transition:padding-right .5s cubic-bezier(.22,1,.36,1);
-}
-/* 패널 열리면 오른쪽 패딩을 패널 너비만큼 확보 */
-body.panel-open .main{
-  padding-right: calc(var(--panel-w) + 24px);
-}
 
-.grid{
-  column-gap:6px;
-  transition:column-count .3s;
-}
+.main{position:relative;z-index:10;padding:96px 24px 40px;transition:padding-right .5s cubic-bezier(.22,1,.36,1);}
+body.panel-open .main{padding-right:calc(var(--panel-w) + 24px);}
 
+.grid{column-gap:24px;transition:column-count .3s;}
+
+/* ── 3D BOOK CARD ── */
 .card{
   break-inside:avoid;
-  margin-bottom:6px;
-  overflow:hidden;
+  margin-bottom:40px;
   cursor:pointer;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
 }
-.card img{
-  width:100%;height:auto;display:block;
-  transition:transform .6s cubic-bezier(.22,1,.36,1), opacity .3s;
+
+.book-scene{perspective:900px;}
+
+.book{
+  position:relative;
+  transform-style:preserve-3d;
+  transform:rotateY(30deg);
+  transition:transform .6s cubic-bezier(.22,1,.36,1);
 }
-.card:hover img{transform:scale(1.03);opacity:.85;}
+.card:hover .book{transform:rotateY(15deg);}
+
+/* 앞면 */
+.b-front{
+  position:relative;
+  overflow:hidden;
+  background:#222;
+  transform-style:preserve-3d;
+}
+.b-front img{width:100%;height:100%;object-fit:cover;display:block;}
+.b-shine{position:absolute;inset:0;background:linear-gradient(110deg,rgba(255,255,255,0.15) 0%,rgba(255,255,255,0) 50%);pointer-events:none;z-index:2;}
+
+/* 책등 */
+.b-spine{
+  position:absolute;top:0;left:0;
+  overflow:hidden;
+  transform-origin:100% 50%;
+  transform:rotateY(-90deg);
+}
+.b-spine img{width:100%;height:100%;object-fit:fill;display:block;}
+.b-spine-color{position:absolute;inset:0;}
+.b-spine-shade{position:absolute;inset:0;background:linear-gradient(to right,rgba(255,255,255,0.1),rgba(0,0,0,0.25));z-index:1;}
+
+/* 윗면 */
+.b-top{position:absolute;top:0;left:0;transform-origin:50% 0%;}
 
 /* 푸터 */
-.copy{
-  position:relative;z-index:10;
-  text-align:center;padding:20px;
-  font-family:'IBM Plex Mono',monospace;
-  font-size:8px;letter-spacing:.18em;text-transform:uppercase;
-  color:rgba(255,255,255,.4);
-}
+.copy{position:relative;z-index:10;text-align:center;padding:20px;font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.4);}
 
 /* ── 슬라이드 패널 ── */
-:root{--panel-w: 480px;}
-
-.panel{
-  position:fixed;top:0;right:0;
-  width:var(--panel-w);
-  height:100vh;
-  background:#111;
-  z-index:400;
-  transform:translateX(100%);
-  transition:transform .5s cubic-bezier(.22,1,.36,1);
-  overflow-y:auto;
-  display:flex;flex-direction:column;
-  min-width:280px;
-  max-width:50vw;
-}
+:root{--panel-w:480px;}
+.panel{position:fixed;top:0;right:0;width:var(--panel-w);height:100vh;background:#111;z-index:400;transform:translateX(100%);transition:transform .5s cubic-bezier(.22,1,.36,1);overflow-y:auto;display:flex;flex-direction:column;min-width:280px;max-width:50vw;}
 .panel.open{transform:translateX(0);}
 
-.resize-handle{
-  position:absolute;top:0;left:0;
-  width:16px;height:100%;
-  cursor:ew-resize;
-  z-index:10;
-  background:transparent;
-  transition:background .2s;
-}
-.resize-handle:hover{
-  background:rgba(255,255,255,.08);
-}
-.resize-handle::before{
-  content:'';
-  position:absolute;
-  left:6px;top:50%;
-  transform:translateY(-50%);
-  width:2px;height:40px;
-  border-radius:2px;
-  background:rgba(255,255,255,.2);
-  transition:background .2s, height .2s;
-}
-.resize-handle:hover::before{
-  background:rgba(255,255,255,.7);
-  height:60px;
-}
-.resize-handle::after{
-  content:'⟺';
-  position:absolute;
-  left:50%;top:50%;
-  transform:translate(-50%, -50%) translateY(36px);
-  font-size:10px;
-  color:rgba(255,255,255,0);
-  transition:color .2s;
-  white-space:nowrap;
-  font-family:'IBM Plex Mono',monospace;
-  letter-spacing:.1em;
-}
-.resize-handle:hover::after{
-  color:rgba(255,255,255,.4);
-}
+.resize-handle{position:absolute;top:0;left:0;width:16px;height:100%;cursor:ew-resize;z-index:10;background:transparent;transition:background .2s;}
+.resize-handle:hover{background:rgba(255,255,255,.08);}
+.resize-handle::before{content:'';position:absolute;left:6px;top:50%;transform:translateY(-50%);width:2px;height:40px;border-radius:2px;background:rgba(255,255,255,.2);transition:background .2s,height .2s;}
+.resize-handle:hover::before{background:rgba(255,255,255,.7);height:60px;}
+.resize-handle::after{content:'⟺';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) translateY(36px);font-size:10px;color:rgba(255,255,255,0);transition:color .2s;white-space:nowrap;font-family:'IBM Plex Mono',monospace;letter-spacing:.1em;}
+.resize-handle:hover::after{color:rgba(255,255,255,.4);}
 
-.panel-close{
-  position:sticky;top:0;
-  display:flex;justify-content:flex-end;
-  padding:20px 24px 0;
-  background:#111;z-index:1;
-}
-.panel-close button{
-  background:none;border:none;cursor:pointer;
-  font-family:'IBM Plex Mono',monospace;
-  font-size:18px;line-height:1;
-  color:rgba(255,255,255,.6);
-  transition:color .2s;
-  padding:4px;
-}
+.panel-close{position:sticky;top:0;display:flex;justify-content:flex-end;padding:20px 24px 0;background:#111;z-index:1;}
+.panel-close button{background:none;border:none;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:18px;line-height:1;color:rgba(255,255,255,.6);transition:color .2s;padding:4px;}
 .panel-close button:hover{color:#d4270a;}
-
 .panel-img{width:100%;height:auto;display:block;margin-top:16px;}
-
 .panel-body{padding:32px 32px 48px;}
-.panel-title{
-  font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-size:16px;font-weight:400;color:#f2ede6;
-  line-height:1.5;margin-bottom:8px;
-  letter-spacing:0;
-}
-.panel-meta{
-  font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-size:11px;letter-spacing:.05em;text-transform:uppercase;
-  color:rgba(255,255,255,.35);margin-bottom:28px;
-}
-.panel-text{
-  font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-size:13px;font-weight:300;color:rgba(255,255,255,.65);line-height:2;
-}
+.panel-title{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:16px;font-weight:400;color:#f2ede6;line-height:1.5;margin-bottom:8px;letter-spacing:0;}
+.panel-meta{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:28px;}
+.panel-text{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;font-weight:300;color:rgba(255,255,255,.65);line-height:2;}
 </style>
 </head>
 <body>
@@ -191,17 +112,72 @@ body.panel-open .main{
 </div>
 
 <div class="main">
-  <div class="grid">
-    <div class="card" data-title="나만의 카운슬러 공자" data-meta="출판 · 2025" data-img="images/work1.jpg" data-text="2,500년을 넘어 전해진 공자의 지혜를 오늘의 언어로 재해석한 책. 삶의 방향을 잃었을 때 단단한 기준이 되어주는 철학 에세이다. 흔들리는 마음을 붙잡는 문장들을 한 권에 담았다. 독자 스스로 자신만의 카운슬러를 찾아가는 여정을 그린다. 표지 디자인은 고요함과 긴장감을 동시에 담아내는 방향으로 작업했다.">
-      <img src="images/work1.jpg" alt="work1"/></div>
-    <div class="card" data-title="작업 제목 02" data-meta="브랜딩 · 2025" data-img="images/work2.jpg" data-text="브랜드의 정체성을 시각 언어로 풀어낸 아이덴티티 작업. 로고부터 컬러 시스템까지 일관된 톤을 유지했다. 단순함 속에 깊이를 담는 것을 목표로 삼았다. 다양한 매체에서 유연하게 적용되도록 시스템을 설계했다. 브랜드가 전하고자 하는 메시지를 형태로 번역하는 과정에 집중했다.">
-      <img src="images/work2.jpg" alt="work2"/></div>
-    <div class="card" data-title="작업 제목 03" data-meta="그래픽 · 2024" data-img="images/work3.jpg" data-text="이미지와 텍스트가 교차하는 지점에서 시작된 그래픽 작업. 인쇄물의 물성을 염두에 두고 색과 여백을 설계했다. 보는 이에게 여운을 남기는 구성을 고민했다. 레이아웃의 긴장감을 유지하면서도 읽기 편한 흐름을 만들었다. 그래픽 언어로 감정을 전달하는 가능성을 탐구했다.">
-      <img src="images/work3.jpg" alt="work3"/></div>
-    <div class="card" data-title="작업 제목 04" data-meta="편집 · 2024" data-img="images/work4.jpg" data-text="편집 디자인의 리듬감을 탐구한 프로젝트. 페이지마다 다른 호흡을 갖되 전체적인 통일감을 유지했다. 타이포그래피와 이미지 사이의 관계를 실험했다. 독자의 시선이 자연스럽게 흐르도록 구성을 다듬었다. 종이 위에서만 가능한 감각을 최대한 끌어내고자 했다.">
-      <img src="images/work4.jpg" alt="work4"/></div>
-    <div class="card" data-title="작업 제목 06" data-meta="그래픽 · 2024" data-img="images/work6.jpg" data-text="자유와 해방을 주제로 한 그래픽 시리즈. 억압된 감각을 시각적으로 풀어내는 실험적 작업이다. 형태가 규칙을 벗어나는 순간의 에너지를 포착했다. 색의 충돌과 조화를 통해 긴장과 해소를 반복한다. 보는 이가 스스로의 자유를 상상하게 만드는 것이 목표였다.">
-      <img src="images/work6.jpg" alt="work6"/></div>
+  <div class="grid" id="grid">
+
+    <!--
+      data-cover : 표지 이미지 경로
+      data-spine  : 책등 이미지 경로 (없으면 data-spine-color 색상 사용)
+      data-spine-color : 책등 색상 (기본 #1a1a1a)
+      data-thickness   : 두께 px (기본 36)
+      data-title / data-meta / data-text : 상세패널 내용
+      data-detail : 상세패널에 보여줄 큰 이미지 (없으면 cover 사용)
+    -->
+
+    <div class="card"
+      data-cover="images/work1.jpg"
+      data-spine=""
+      data-spine-color="#1a1a1a"
+      data-thickness="36"
+      data-title="나만의 카운슬러 공자"
+      data-meta="출판 · 2025"
+      data-detail="images/work1.jpg"
+      data-text="2,500년을 넘어 전해진 공자의 지혜를 오늘의 언어로 재해석한 책. 삶의 방향을 잃었을 때 단단한 기준이 되어주는 철학 에세이다. 흔들리는 마음을 붙잡는 문장들을 한 권에 담았다. 독자 스스로 자신만의 카운슬러를 찾아가는 여정을 그린다. 표지 디자인은 고요함과 긴장감을 동시에 담아내는 방향으로 작업했다.">
+    </div>
+
+    <div class="card"
+      data-cover="images/work2.jpg"
+      data-spine=""
+      data-spine-color="#2c3e50"
+      data-thickness="32"
+      data-title="작업 제목 02"
+      data-meta="브랜딩 · 2025"
+      data-detail="images/work2.jpg"
+      data-text="브랜드의 정체성을 시각 언어로 풀어낸 아이덴티티 작업. 로고부터 컬러 시스템까지 일관된 톤을 유지했다. 단순함 속에 깊이를 담는 것을 목표로 삼았다. 다양한 매체에서 유연하게 적용되도록 시스템을 설계했다. 브랜드가 전하고자 하는 메시지를 형태로 번역하는 과정에 집중했다.">
+    </div>
+
+    <div class="card"
+      data-cover="images/work3.jpg"
+      data-spine=""
+      data-spine-color="#4a3728"
+      data-thickness="28"
+      data-title="작업 제목 03"
+      data-meta="그래픽 · 2024"
+      data-detail="images/work3.jpg"
+      data-text="이미지와 텍스트가 교차하는 지점에서 시작된 그래픽 작업. 인쇄물의 물성을 염두에 두고 색과 여백을 설계했다. 보는 이에게 여운을 남기는 구성을 고민했다. 레이아웃의 긴장감을 유지하면서도 읽기 편한 흐름을 만들었다. 그래픽 언어로 감정을 전달하는 가능성을 탐구했다.">
+    </div>
+
+    <div class="card"
+      data-cover="images/work4.jpg"
+      data-spine=""
+      data-spine-color="#1a1a1a"
+      data-thickness="40"
+      data-title="작업 제목 04"
+      data-meta="편집 · 2024"
+      data-detail="images/work4.jpg"
+      data-text="편집 디자인의 리듬감을 탐구한 프로젝트. 페이지마다 다른 호흡을 갖되 전체적인 통일감을 유지했다. 타이포그래피와 이미지 사이의 관계를 실험했다. 독자의 시선이 자연스럽게 흐르도록 구성을 다듬었다. 종이 위에서만 가능한 감각을 최대한 끌어내고자 했다.">
+    </div>
+
+    <div class="card"
+      data-cover="images/work6.jpg"
+      data-spine=""
+      data-spine-color="#d4270a"
+      data-thickness="36"
+      data-title="작업 제목 06"
+      data-meta="그래픽 · 2024"
+      data-detail="images/work6.jpg"
+      data-text="자유와 해방을 주제로 한 그래픽 시리즈. 억압된 감각을 시각적으로 풀어내는 실험적 작업이다. 형태가 규칙을 벗어나는 순간의 에너지를 포착했다. 색의 충돌과 조화를 통해 긴장과 해소를 반복한다. 보는 이가 스스로의 자유를 상상하게 만드는 것이 목표였다.">
+    </div>
+
   </div>
 </div>
 
@@ -210,9 +186,7 @@ body.panel-open .main{
 <!-- 슬라이드 패널 -->
 <div class="panel" id="panel">
   <div class="resize-handle" id="resizeHandle"></div>
-  <div class="panel-close">
-    <button id="closeBtn">✕</button>
-  </div>
+  <div class="panel-close"><button id="closeBtn">✕</button></div>
   <img class="panel-img" id="panelImg" src="" alt=""/>
   <div class="panel-body">
     <p class="panel-title" id="panelTitle"></p>
@@ -222,26 +196,106 @@ body.panel-open .main{
 </div>
 
 <script>
+const BOOK_W = 160;
+
+function buildBook(card) {
+  const cover     = card.dataset.cover;
+  const spine     = card.dataset.spine;
+  const spineColor = card.dataset.spineColor || '#1a1a1a';
+  const thickness = parseInt(card.dataset.thickness) || 36;
+
+  const scene = document.createElement('div');
+  scene.className = 'book-scene';
+
+  const book = document.createElement('div');
+  book.className = 'book';
+
+  // 표지 이미지 비율 계산 후 렌더
+  const img = new Image();
+  img.onload = () => {
+    const ratio = img.naturalHeight / img.naturalWidth;
+    const bookH = Math.round(BOOK_W * ratio);
+
+    book.style.width  = BOOK_W + 'px';
+    book.style.height = bookH + 'px';
+
+    // 앞면
+    const front = document.createElement('div');
+    front.className = 'b-front';
+    front.style.width  = BOOK_W + 'px';
+    front.style.height = bookH + 'px';
+    front.style.transform = 'translateZ(' + (thickness/2) + 'px)';
+    const coverImg = document.createElement('img');
+    coverImg.src = cover;
+    coverImg.alt = card.dataset.title || '';
+    const shine = document.createElement('div');
+    shine.className = 'b-shine';
+    front.appendChild(coverImg);
+    front.appendChild(shine);
+
+    // 책등
+    const spineEl = document.createElement('div');
+    spineEl.className = 'b-spine';
+    spineEl.style.width  = thickness + 'px';
+    spineEl.style.height = bookH + 'px';
+    spineEl.style.transform = 'translateZ(' + (thickness/2) + 'px) translateX(-' + thickness + 'px) rotateY(-90deg)';
+    spineEl.style.transformOrigin = '100% 50%';
+
+    const spineColorEl = document.createElement('div');
+    spineColorEl.className = 'b-spine-color';
+    spineColorEl.style.background = spineColor;
+    spineEl.appendChild(spineColorEl);
+
+    if (spine) {
+      const spineImg = document.createElement('img');
+      spineImg.src = spine;
+      spineImg.style.cssText = 'position:absolute;inset:0;width:'+thickness+'px;height:'+bookH+'px;object-fit:fill;z-index:1;';
+      spineEl.appendChild(spineImg);
+    }
+    const spineShade = document.createElement('div');
+    spineShade.className = 'b-spine-shade';
+    spineEl.appendChild(spineShade);
+
+    // 윗면
+    const top = document.createElement('div');
+    top.className = 'b-top';
+    top.style.width  = BOOK_W + 'px';
+    top.style.height = thickness + 'px';
+    top.style.background = spineColor;
+    top.style.transform = 'translateZ(' + (thickness/2) + 'px) rotateX(90deg) translateY(-' + thickness + 'px)';
+    top.style.transformOrigin = '50% 0%';
+
+    book.appendChild(front);
+    book.appendChild(spineEl);
+    book.appendChild(top);
+    scene.appendChild(book);
+    card.innerHTML = '';
+    card.appendChild(scene);
+  };
+  img.src = cover;
+}
+
+// 모든 카드에 3D 목업 생성
+document.querySelectorAll('.card').forEach(card => buildBook(card));
+
+// ── 패널 ──
 const panel    = document.getElementById('panel');
 const closeBtn = document.getElementById('closeBtn');
 const handle   = document.getElementById('resizeHandle');
-const grid     = document.querySelector('.grid');
-
-// 썸네일 최소 너비 기준 (px) — 이 값으로 몇 열 들어갈지 계산
-const MIN_CARD_W = 200;
+const grid     = document.getElementById('grid');
+const MIN_CARD_W = 240;
 
 function calcCols() {
   const vw = window.innerWidth;
   const panelOpen = document.body.classList.contains('panel-open');
   const panelW = panelOpen ? panel.offsetWidth : 0;
-  const availW = vw - panelW - 48; // 좌우 패딩 24px씩
+  const availW = vw - panelW - 48;
   const cols = Math.max(1, Math.floor(availW / MIN_CARD_W));
-  // 최대 4열 제한
   grid.style.columnCount = Math.min(cols, 4);
 }
 
 function openPanel(card) {
-  document.getElementById('panelImg').src = card.dataset.img;
+  document.getElementById('panelImg').src = card.dataset.detail || card.dataset.cover;
   document.getElementById('panelTitle').textContent = card.dataset.title;
   document.getElementById('panelMeta').textContent  = card.dataset.meta;
   document.getElementById('panelText').textContent  = card.dataset.text;
@@ -258,46 +312,28 @@ function closePanel() {
   calcCols();
 }
 
-document.querySelectorAll('.card').forEach(c => {
-  c.addEventListener('click', () => openPanel(c));
+// 카드 클릭 — 이벤트 위임
+document.getElementById('grid').addEventListener('click', e => {
+  const card = e.target.closest('.card');
+  if (card) openPanel(card);
 });
+
 closeBtn.addEventListener('click', closePanel);
-document.addEventListener('keydown', e => { if(e.key === 'Escape') closePanel(); });
-
-// 브라우저 리사이즈 대응
+document.addEventListener('keydown', e => { if(e.key==='Escape') closePanel(); });
 window.addEventListener('resize', calcCols);
-
-// 초기 계산
 calcCols();
 
-// ── 드래그로 패널 너비 조절 ──
-let dragging = false;
-let startX, startW;
-
-handle.addEventListener('mousedown', e => {
-  dragging = true;
-  startX = e.clientX;
-  startW = panel.offsetWidth;
-  document.body.style.userSelect = 'none';
-  document.body.style.cursor = 'ew-resize';
-});
-
-document.addEventListener('mousemove', e => {
-  if (!dragging) return;
-  const dx = startX - e.clientX;
-  const maxW = window.innerWidth * 0.5;
-  const newW = Math.min(Math.max(startW + dx, 280), maxW);
-  panel.style.width = newW + 'px';
-  document.documentElement.style.setProperty('--panel-w', newW + 'px');
+// 패널 드래그
+let dragging=false, startX, startW;
+handle.addEventListener('mousedown', e=>{dragging=true;startX=e.clientX;startW=panel.offsetWidth;document.body.style.userSelect='none';document.body.style.cursor='ew-resize';});
+document.addEventListener('mousemove', e=>{
+  if(!dragging)return;
+  const newW=Math.min(Math.max(startW-(e.clientX-startX),280),window.innerWidth*0.5);
+  panel.style.width=newW+'px';
+  document.documentElement.style.setProperty('--panel-w',newW+'px');
   calcCols();
 });
-
-document.addEventListener('mouseup', () => {
-  if (!dragging) return;
-  dragging = false;
-  document.body.style.userSelect = '';
-  document.body.style.cursor = '';
-});
+document.addEventListener('mouseup',()=>{if(!dragging)return;dragging=false;document.body.style.userSelect='';document.body.style.cursor='';});
 </script>
 
 </body>

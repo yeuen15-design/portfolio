@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Book Mockup Generator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+
+html,body{
+  width:100%;min-height:100vh;
+  background:#f5f5f3;
+  color:#111;
+  font-family:'IBM Plex Mono',monospace;
+}
+
+/* NAV */
+nav{
+  padding:20px 40px;
+  border-bottom:1px solid #e0e0e0;
+  background:#fff;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.nav-title{
+  font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#111;
+}
+.nav-sub{
+  font-size:10px;letter-spacing:.14em;color:#999;
+}
+
+/* LAYOUT */
+.container{
+  display:grid;
+  grid-template-columns:320px 1fr;
+  min-height:calc(100vh - 61px);
+}
+
+/* CONTROLS */
+.sidebar{
+  background:#fff;
+  border-right:1px solid #e0e0e0;
+  padding:32px 28px;
+  display:flex;flex-direction:column;gap:28px;
+  overflow-y:auto;
+}
+
+.ctrl-group{}
+.ctrl-label{
+  font-size:9px;letter-spacing:.2em;text-transform:uppercase;
+  color:#999;margin-bottom:12px;
+  padding-bottom:8px;
+  border-bottom:1px solid #eee;
+}
+
+/* 업로드 */
+.upload-zone{
+  border:1px dashed #ccc;
+  padding:24px 16px;
+  text-align:center;
+  cursor:pointer;
+  transition:border-color .2s, background .2s;
+  background:#fafafa;
+}
+.upload-zone:hover{border-color:#111;background:#f5f5f3;}
+.upload-zone p{font-size:11px;color:#999;line-height:1.8;}
+.upload-zone strong{font-size:11px;color:#111;font-weight:400;}
+input[type=file]{display:none;}
+
+.ratio-info{
+  font-size:10px;color:#bbb;margin-top:8px;line-height:1.6;
+}
+
+/* 슬라이더 */
+.slider-row{
+  display:flex;align-items:center;gap:12px;margin-bottom:4px;
+}
+.slider-row label{font-size:10px;color:#999;min-width:32px;}
+.slider-row input{flex:1;}
+.slider-row span{font-size:10px;color:#111;min-width:36px;text-align:right;}
+
+/* 컬러 팔레트 */
+.color-grid{
+  display:flex;gap:8px;flex-wrap:wrap;
+}
+.cc{
+  width:28px;height:28px;border-radius:50%;
+  cursor:pointer;border:2px solid transparent;
+  transition:transform .15s, border .15s;
+}
+.cc:hover{transform:scale(1.1);}
+.cc.active{border:2px solid #111;}
+.cc.light{border:1px solid #ddd;}
+.cc.light.active{border:2px solid #111;}
+
+/* 저장 버튼 */
+.save-btn{
+  width:100%;padding:12px;
+  background:#111;color:#fff;
+  border:none;cursor:pointer;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+  transition:background .2s;
+}
+.save-btn:hover{background:#333;}
+
+/* PREVIEW */
+.preview{
+  display:flex;align-items:center;justify-content:center;
+  background:#f5f5f3;
+  position:relative;
+}
+
+.scene{perspective:1400px;}
+.book{
+  position:relative;
+  transform-style:preserve-3d;
+  transform:rotateY(-50deg);
+  transition:transform 0.7s cubic-bezier(.22,1,.36,1);
+}
+.book:hover{transform:rotateY(-35deg);}
+
+.face{position:absolute;top:0;left:0;backface-visibility:hidden;overflow:hidden;}
+.face.front{background:#e8e3da;}
+.face.front img{width:100%;height:100%;object-fit:cover;display:block;}
+.placeholder-label{
+  width:100%;height:100%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+  background:#eeece8;cursor:pointer;
+}
+.placeholder-label p{font-size:10px;color:#999;letter-spacing:.1em;}
+.placeholder-icon{font-size:24px;opacity:.4;}
+.shine{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  background:linear-gradient(110deg,rgba(255,255,255,0.2) 0%,rgba(255,255,255,0) 45%);
+  pointer-events:none;z-index:2;
+}
+.face.spine{position:absolute;top:0;transform-origin:right center;transform:rotateY(-90deg);}
+.spine-inner{position:absolute;inset:0;background:linear-gradient(to right,rgba(255,255,255,0.1),rgba(0,0,0,0.2));}
+.face.top{position:absolute;top:0;left:0;transform-origin:top center;}
+.pages{position:absolute;top:2px;border-radius:0 1px 1px 0;}
+
+/* 하단 힌트 */
+.hint{
+  position:absolute;bottom:24px;
+  font-size:9px;letter-spacing:.14em;color:#bbb;text-transform:uppercase;
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-title">Book Mockup Generator</span>
+  <span class="nav-sub">가로 고정 / 세로 이미지 비율 자동</span>
+</nav>
+
+<div class="container">
+
+  <!-- 사이드바 -->
+  <div class="sidebar">
+
+    <div class="ctrl-group">
+      <p class="ctrl-label">표지 이미지</p>
+      <label class="upload-zone" for="file-in">
+        <div class="placeholder-icon">↑</div>
+        <p><strong>클릭하여 업로드</strong></p>
+        <p>JPG, PNG, WEBP</p>
+      </label>
+      <input type="file" id="file-in" accept="image/*">
+      <div class="ratio-info" id="ratio-info"></div>
+    </div>
+
+    <div class="ctrl-group">
+      <p class="ctrl-label">책등 색상</p>
+      <div class="color-grid" id="cc-wrap">
+        <div class="cc active" data-c="#1a1a1a" style="background:#1a1a1a;"></div>
+        <div class="cc" data-c="#3d3d3d" style="background:#3d3d3d;"></div>
+        <div class="cc light" data-c="#f0ebe0" style="background:#f0ebe0;"></div>
+        <div class="cc light" data-c="#e8e0d0" style="background:#e8e0d0;"></div>
+        <div class="cc" data-c="#c8b89a" style="background:#c8b89a;"></div>
+        <div class="cc" data-c="#a08060" style="background:#a08060;"></div>
+        <div class="cc" data-c="#d4270a" style="background:#d4270a;"></div>
+        <div class="cc" data-c="#e8a020" style="background:#e8a020;"></div>
+        <div class="cc" data-c="#2c5f8a" style="background:#2c5f8a;"></div>
+        <div class="cc" data-c="#1a3a5c" style="background:#1a3a5c;"></div>
+        <div class="cc" data-c="#4a7c59" style="background:#4a7c59;"></div>
+        <div class="cc" data-c="#7c5c8a" style="background:#7c5c8a;"></div>
+      </div>
+    </div>
+
+    <div class="ctrl-group">
+      <p class="ctrl-label">두께</p>
+      <div class="slider-row">
+        <label>얇게</label>
+        <input type="range" min="12" max="80" value="40" id="thick-sl">
+        <span id="thick-val">40</span>
+      </div>
+    </div>
+
+    <div class="ctrl-group">
+      <p class="ctrl-label">각도</p>
+      <div class="slider-row">
+        <label>정면</label>
+        <input type="range" min="-80" max="-5" value="-50" id="angle-sl">
+        <span id="angle-val">-50°</span>
+      </div>
+    </div>
+
+    <div class="ctrl-group">
+      <p class="ctrl-label">저장</p>
+      <button class="save-btn" id="save-btn">PNG로 저장 ↓</button>
+    </div>
+
+  </div>
+
+  <!-- 프리뷰 -->
+  <div class="preview">
+    <div class="scene">
+      <div class="book" id="book">
+        <div class="face front" id="front-face">
+          <label class="placeholder-label" for="file-in" id="placeholder">
+            <span class="placeholder-icon">↑</span>
+            <p>표지 이미지 업로드</p>
+          </label>
+          <img id="cover-img" src="" style="display:none;">
+          <div class="shine"></div>
+        </div>
+        <div class="face spine" id="spine-face" style="background:#1a1a1a;">
+          <div class="spine-inner"></div>
+        </div>
+        <div class="face top" id="top-face" style="background:#1a1a1a;"></div>
+        <div class="pages" id="pages"></div>
+      </div>
+    </div>
+    <p class="hint">hover to rotate</p>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+const BOOK_W = 220;
+let bookH = 300;
+let thickness = 40;
+let spineColor = '#1a1a1a';
+
+const book = document.getElementById('book');
+const frontFace = document.getElementById('front-face');
+const spineFace = document.getElementById('spine-face');
+const topFace = document.getElementById('top-face');
+const pages = document.getElementById('pages');
+const coverImg = document.getElementById('cover-img');
+const placeholder = document.getElementById('placeholder');
+
+function apply() {
+  book.style.width = BOOK_W + 'px';
+  book.style.height = bookH + 'px';
+
+  frontFace.style.width = BOOK_W + 'px';
+  frontFace.style.height = bookH + 'px';
+  frontFace.style.transform = 'translateZ(' + (thickness/2) + 'px)';
+
+  spineFace.style.width = thickness + 'px';
+  spineFace.style.height = bookH + 'px';
+  spineFace.style.left = '-' + thickness + 'px';
+
+  topFace.style.width = BOOK_W + 'px';
+  topFace.style.height = thickness + 'px';
+  topFace.style.transform = 'translateZ(' + (thickness/2) + 'px) rotateX(90deg) translateZ(-' + (thickness/2) + 'px)';
+
+  const pgW = Math.max(4, Math.round(thickness / 7));
+  pages.style.width = pgW + 'px';
+  pages.style.height = (bookH - 4) + 'px';
+  pages.style.right = '-' + pgW + 'px';
+  pages.style.top = '2px';
+
+  const dark = isDark(spineColor);
+  pages.style.background = dark
+    ? 'repeating-linear-gradient(to bottom,#2a2a2a 0px,#2a2a2a 1px,#1a1a1a 1px,#1a1a1a 3px)'
+    : 'repeating-linear-gradient(to bottom,#e0dbd2 0px,#e0dbd2 1px,#f0ece4 1px,#f0ece4 3px)';
+}
+
+function isDark(hex) {
+  const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
+  return (r*299+g*587+b*114)/1000 < 160;
+}
+
+document.getElementById('thick-sl').addEventListener('input', e => {
+  thickness = parseInt(e.target.value);
+  document.getElementById('thick-val').textContent = thickness;
+  apply();
+});
+
+document.getElementById('angle-sl').addEventListener('input', e => {
+  const v = e.target.value;
+  document.getElementById('angle-val').textContent = v + '°';
+  book.style.transform = 'rotateY(' + v + 'deg)';
+});
+
+document.querySelectorAll('.cc').forEach(el => {
+  el.addEventListener('click', () => {
+    document.querySelectorAll('.cc').forEach(s => { s.classList.remove('active'); });
+    el.classList.add('active');
+    spineColor = el.dataset.c;
+    spineFace.style.background = spineColor;
+    topFace.style.background = spineColor;
+    apply();
+  });
+});
+
+document.getElementById('file-in').addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const img = new Image();
+    img.onload = () => {
+      const ratio = img.naturalHeight / img.naturalWidth;
+      bookH = Math.round(BOOK_W * ratio);
+      document.getElementById('ratio-info').textContent =
+        '원본 ' + img.naturalWidth + '×' + img.naturalHeight + ' → 목업 ' + BOOK_W + '×' + bookH;
+      coverImg.src = ev.target.result;
+      coverImg.style.display = 'block';
+      placeholder.style.display = 'none';
+      apply();
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+});
+
+document.getElementById('save-btn').addEventListener('click', () => {
+  const preview = document.querySelector('.preview');
+  html2canvas(preview, { backgroundColor: '#f5f5f3', scale: 2 }).then(canvas => {
+    const a = document.createElement('a');
+    a.download = 'book-mockup.png';
+    a.href = canvas.toDataURL('image/png');
+    a.click();
+  });
+});
+
+apply();
+</script>
+
+</body>
+</html>
