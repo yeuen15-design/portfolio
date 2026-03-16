@@ -40,6 +40,7 @@ body.panel-open .main{padding-right:calc(var(--panel-w) + 24px);}
 
 /* ── 3D BOOK CARD ── */
 .card{
+  background: var(--card-bg);
   padding: 40px 20px;
   break-inside:avoid;
   margin-bottom:40px;
@@ -87,25 +88,28 @@ body.panel-open .main{padding-right:calc(var(--panel-w) + 24px);}
 .copy{position:relative;z-index:10;text-align:center;padding:20px;font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:rgba(0,0,0,.3);}
 
 /* ── 슬라이드 패널 ── */
-:root{--panel-w:480px;}
-.panel{position:fixed;top:0;right:0;width:var(--panel-w);height:100vh;background:#111;z-index:400;transform:translateX(100%);transition:transform .5s cubic-bezier(.22,1,.36,1);overflow-y:auto;display:flex;flex-direction:column;min-width:280px;max-width:50vw;}
+:root{
+  --panel-w: 480px;
+  --card-bg: #f0ebe0; /* ← 여기서 카드 배경색 변경 */
+}
+.panel{position:fixed;top:0;right:0;width:var(--panel-w);height:100vh;background:#fff;z-index:400;transform:translateX(100%);transition:transform .5s cubic-bezier(.22,1,.36,1);overflow-y:auto;display:flex;flex-direction:column;min-width:280px;max-width:50vw;}
 .panel.open{transform:translateX(0);}
 
 .resize-handle{position:absolute;top:0;left:0;width:16px;height:100%;cursor:ew-resize;z-index:10;background:transparent;transition:background .2s;}
-.resize-handle:hover{background:rgba(255,255,255,.08);}
-.resize-handle::before{content:'';position:absolute;left:6px;top:50%;transform:translateY(-50%);width:2px;height:40px;border-radius:2px;background:rgba(255,255,255,.2);transition:background .2s,height .2s;}
-.resize-handle:hover::before{background:rgba(255,255,255,.7);height:60px;}
-.resize-handle::after{content:'⟺';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) translateY(36px);font-size:10px;color:rgba(255,255,255,0);transition:color .2s;white-space:nowrap;font-family:'IBM Plex Mono',monospace;letter-spacing:.1em;}
+.resize-handle:hover{background:rgba(0,0,0,.05);}
+.resize-handle::before{content:'';position:absolute;left:6px;top:50%;transform:translateY(-50%);width:2px;height:40px;border-radius:2px;background:rgba(0,0,0,.15);transition:background .2s,height .2s;}
+.resize-handle:hover::before{background:rgba(0,0,0,.5);height:60px;}
+.resize-handle::after{content:'⟺';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) translateY(36px);font-size:10px;color:rgba(0,0,0,0);transition:color .2s;white-space:nowrap;font-family:'IBM Plex Mono',monospace;letter-spacing:.1em;}
 .resize-handle:hover::after{color:rgba(0,0,0,.3);}
 
-.panel-close{position:sticky;top:0;display:flex;justify-content:flex-end;padding:20px 24px 0;background:#111;z-index:1;}
-.panel-close button{background:none;border:none;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:18px;line-height:1;color:rgba(255,255,255,.6);transition:color .2s;padding:4px;}
+.panel-close{position:sticky;top:0;display:flex;justify-content:flex-end;padding:20px 24px 0;background:#fff;z-index:1;}
+.panel-close button{background:none;border:none;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:18px;line-height:1;color:rgba(0,0,0,.4);transition:color .2s;padding:4px;}
 .panel-close button:hover{color:#d4270a;}
-.panel-img{width:100%;height:auto;display:block;margin-top:16px;}
+.panel-img{width:calc(100% - 48px);height:auto;display:block;margin:16px 24px 0;}
 .panel-body{padding:32px 32px 48px;}
-.panel-title{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:16px;font-weight:400;color:#f2ede6;line-height:1.5;margin-bottom:8px;letter-spacing:0;}
-.panel-meta{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:28px;}
-.panel-text{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;font-weight:300;color:rgba(255,255,255,.65);line-height:2;}
+.panel-title{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:16px;font-weight:400;color:#111;line-height:1.5;margin-bottom:8px;letter-spacing:0;}
+.panel-meta{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:#999;margin-bottom:28px;}
+.panel-text{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;font-weight:300;color:#444;line-height:2;}
 </style>
 </head>
 <body>
@@ -133,13 +137,13 @@ body.panel-open .main{padding-right:calc(var(--panel-w) + 24px);}
     -->
 
     <div class="card"
-      data-cover="images/work1.jpg"
-      data-spine=""
-      data-spine-color="#1a1a1a"
-      data-thickness="36"
+      data-cover="images/cover-confucius.jpg"
+      data-spine="images/spine-confucius.jpg"
+      data-spine-color="#1a2a4a"
+      data-thickness="22"
       data-title="나만의 카운슬러 공자"
       data-meta="출판 · 2025"
-      data-detail="images/work1.jpg"
+      data-detail="images/cover-confucius.jpg"
       data-text="2,500년을 넘어 전해진 공자의 지혜를 오늘의 언어로 재해석한 책. 삶의 방향을 잃었을 때 단단한 기준이 되어주는 철학 에세이다. 흔들리는 마음을 붙잡는 문장들을 한 권에 담았다. 독자 스스로 자신만의 카운슬러를 찾아가는 여정을 그린다. 표지 디자인은 고요함과 긴장감을 동시에 담아내는 방향으로 작업했다.">
     </div>
 
@@ -311,39 +315,6 @@ function buildBook(card) {
     scene.appendChild(book);
     card.innerHTML = '';
     card.appendChild(scene);
-
-    // 표지 이미지에서 주요 색상 추출 → 배경 자동 적용
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = 10;
-    canvas.height = 10;
-    const tmpImg = new Image();
-    tmpImg.crossOrigin = 'anonymous';
-    tmpImg.onload = () => {
-      ctx.drawImage(tmpImg, 0, 0, 10, 10);
-      const d = ctx.getImageData(0, 0, 10, 10).data;
-      let r=0, g=0, b=0, count=0;
-      for(let i=0; i<d.length; i+=4){
-        // 너무 어둡거나 너무 밝은 픽셀 제외
-        const brightness = (d[i]+d[i+1]+d[i+2])/3;
-        if(brightness > 30 && brightness < 230){
-          r+=d[i]; g+=d[i+1]; b+=d[i+2]; count++;
-        }
-      }
-      if(count > 0){
-        r=Math.round(r/count); g=Math.round(g/count); b=Math.round(b/count);
-        // 채도 낮추고 밝기 높여서 부드러운 배경색으로
-        const avg = (r+g+b)/3;
-        const blend = 0.25;
-        r = Math.round(r*blend + 245*(1-blend));
-        g = Math.round(g*blend + 242*(1-blend));
-        b = Math.round(b*blend + 238*(1-blend));
-        card.style.background = `rgb(${r},${g},${b})`;
-      } else {
-        card.style.background = '#f5f2ee';
-      }
-    };
-    tmpImg.src = cover;
   };
   img.src = cover;
 }
