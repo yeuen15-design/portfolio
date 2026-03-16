@@ -11,7 +11,7 @@
 
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-html,body{width:100%;overflow-x:hidden;}
+html,body{width:100%;overflow-x:hidden;cursor:url('images/cursor.png') 16 16, auto;}
 
 .bg{position:fixed;inset:0;background:#fff;z-index:0;transition:background 0.6s ease, opacity 0.6s ease;background-size:cover;background-position:center;}
 
@@ -483,12 +483,12 @@ function applyColor(filter) {
   const c = catColors[filter] || catColors.all;
   const bgEl = document.querySelector('.bg');
   if(c.bgImg){
+    bgEl.style.background = c.bg;
     bgEl.style.backgroundImage = `url('${c.bgImg}')`;
     bgEl.style.backgroundSize = 'cover';
     bgEl.style.backgroundPosition = 'center';
-    bgEl.style.background = c.bg;
   } else {
-    bgEl.style.backgroundImage = 'none';
+    bgEl.style.backgroundImage = '';
     bgEl.style.background = c.bg;
   }
   document.documentElement.style.setProperty('--card-bg', c.card);
