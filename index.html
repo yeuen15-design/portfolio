@@ -49,6 +49,8 @@ body.panel-open .main{padding-right:calc(var(--panel-w) + 24px);}
   display:flex;
   align-items:flex-end;
   justify-content:center;
+  border-radius:12px;
+  overflow:hidden;
 }
 
 /* PNG 목업 카드 */
@@ -64,6 +66,7 @@ body.panel-open .main{padding-right:calc(var(--panel-w) + 24px);}
   align-items:center;
   justify-content:center;
   padding:20px;
+  border-radius:12px;
 }
 .card-img img{
   width:100%;
@@ -693,6 +696,14 @@ function buildBook(card) {
 // 모든 카드에 3D 목업 생성
 document.querySelectorAll('.card').forEach(card => buildBook(card));
 
+// ── 카드 셔플 ──
+function shuffleGrid() {
+  const grid = document.getElementById('grid');
+  const cards = [...grid.querySelectorAll('.card, .card-img')];
+  cards.sort(() => Math.random() - 0.5);
+  cards.forEach(c => grid.appendChild(c));
+}
+
 // ── 카테고리별 색상 ──
 const catColors = {
   all:       { bg: '#ffffff', card: '#f0f0f0', nav: '#111', bgImg: '' },
@@ -726,6 +737,14 @@ function applyColor(filter) {
   if(copy) copy.style.color = c.nav === '#fff' ? 'rgba(255,255,255,.3)' : 'rgba(0,0,0,.3)';
 }
 
+// ── 카드 셔플 ──
+function shuffleGrid() {
+  const grid = document.getElementById('grid');
+  const cards = [...grid.children];
+  cards.sort(() => Math.random() - 0.5);
+  cards.forEach(c => grid.appendChild(c));
+}
+
 // ── 카테고리 필터 ──
 document.querySelectorAll('.cat-nav a').forEach(btn => {
   btn.addEventListener('click', e => {
@@ -741,11 +760,13 @@ document.querySelectorAll('.cat-nav a').forEach(btn => {
       }
     });
     applyColor(filter);
+    if(filter === 'all') shuffleGrid();
     calcCols();
   });
 });
 
 applyColor('all');
+shuffleGrid();
 
 // ── 패널 ──
 const panel    = document.getElementById('panel');
