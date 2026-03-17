@@ -603,6 +603,15 @@ body.panel-open .main{padding-right:calc(var(--panel-w) + 24px);}
       data-text="">
       <img src="images/board-26.jpg" alt="board-26"/>
     </div>
+
+    <div class="card-img" data-cat="graphic"
+  data-title="Girls' Bossam Night"
+  data-meta="그래픽 · 2026"
+  data-detail="images/mockup-girlsbossam.jpg"
+  data-text="">
+  <img src="images/mockup-girlsbossam.jpg" alt="걸스보쌈나잇"/>
+</div>
+
   </div>
 </div>
 
@@ -839,15 +848,6 @@ document.addEventListener('mousemove', e=>{
 });
 document.addEventListener('mouseup',()=>{if(!dragging)return;dragging=false;document.body.style.userSelect='';document.body.style.cursor='';});
 
-// ── 배경 패럴랙스 ──
-window.addEventListener('scroll', () => {
-  const isBoard = document.querySelector('.cat-nav a.active')?.dataset.filter === 'board';
-  if(!isBoard) return;
-  const scrollY = window.scrollY;
-  const bgEl = document.querySelector('.bg');
-  const offset = 50 + scrollY * 0.03;
-  bgEl.style.backgroundPosition = 'center ' + offset + '%';
-});
 </script>
 
 </body>
