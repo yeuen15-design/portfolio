@@ -845,7 +845,7 @@ window.addEventListener('scroll', () => {
   if(!isBoard) return;
   const scrollY = window.scrollY;
   const bgEl = document.querySelector('.bg');
-  const offset = 50 + scrollY * 0.15;
+  const offset = 50 + scrollY * 0.03;
   bgEl.style.backgroundPosition = 'center ' + offset + '%';
 });
 </script>
