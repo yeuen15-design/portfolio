@@ -226,6 +226,44 @@ body.panel-open .panel-backdrop{display:block;opacity:1;}
 .panel-title{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:16px;font-weight:400;color:#111;line-height:1.5;margin-bottom:8px;letter-spacing:0;}
 .panel-meta{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:#999;margin-bottom:28px;}
 .panel-text{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;font-weight:300;color:#444;line-height:2;}
+
+/* ── 모바일 인라인 상세 ── */
+.inline-detail{
+  break-inside:avoid;
+  column-span:all;
+  width:100%;
+  background:#fff;
+  padding:20px 16px 36px;
+  margin-bottom:32px;
+  border-top:1.5px solid #111;
+  animation:inlineSlideDown .35s cubic-bezier(.22,1,.36,1);
+}
+@keyframes inlineSlideDown{
+  from{opacity:0;transform:translateY(-6px);}
+  to{opacity:1;transform:translateY(0);}
+}
+.inline-detail-header{
+  display:flex;justify-content:flex-end;
+  margin-bottom:12px;
+}
+.inline-detail-close-btn{
+  background:none;border:none;cursor:pointer;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:18px;line-height:1;
+  color:rgba(0,0,0,.4);padding:4px;
+  transition:color .2s;
+}
+.inline-detail-close-btn:hover{color:#d4270a;}
+.inline-detail img{
+  width:100%;height:auto;
+  display:block;margin-bottom:10px;
+  border-radius:4px;
+}
+.inline-detail .panel-body{padding:16px 0 0;}
+.card.inline-open,.card-img.inline-open{
+  outline:1.5px solid rgba(0,0,0,.2);
+  outline-offset:3px;
+}
 </style>
 </head>
 <body>
@@ -964,6 +1002,7 @@ function calcCols() {
   grid.style.columnCount = Math.min(cols, 4);
 }
 
+// ── 데스크톱 패널 ──
 function openPanel(card) {
   const details = (card.dataset.detail || card.dataset.cover || '').split(',').map(s=>s.trim()).filter(Boolean);
   const container = document.getElementById('panelImgs');
@@ -990,15 +1029,102 @@ function closePanel() {
   calcCols();
 }
 
-// 카드 클릭 — 이벤트 위임
+// ── 모바일 인라인 상세 ──
+let activeInlineCard = null;
+
+function openInlineDetail(card) {
+  // 같은 카드 재클릭 시 닫기
+  if (activeInlineCard === card) {
+    closeInlineDetail();
+    return;
+  }
+  closeInlineDetail();
+
+  const details = (card.dataset.detail || card.dataset.cover || '').split(',').map(s=>s.trim()).filter(Boolean);
+
+  const block = document.createElement('div');
+  block.className = 'inline-detail';
+  block.id = 'inlineDetail';
+
+  // 닫기 버튼
+  const header = document.createElement('div');
+  header.className = 'inline-detail-header';
+  const closeBtn2 = document.createElement('button');
+  closeBtn2.className = 'inline-detail-close-btn';
+  closeBtn2.textContent = '✕';
+  closeBtn2.setAttribute('aria-label', '상세 닫기');
+  closeBtn2.addEventListener('click', closeInlineDetail);
+  header.appendChild(closeBtn2);
+  block.appendChild(header);
+
+  // 이미지들
+  details.forEach(src => {
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = card.dataset.title || '';
+    block.appendChild(img);
+  });
+
+  // 텍스트
+  const body = document.createElement('div');
+  body.className = 'panel-body';
+  if (card.dataset.title) {
+    const t = document.createElement('p');
+    t.className = 'panel-title';
+    t.textContent = card.dataset.title;
+    body.appendChild(t);
+  }
+  if (card.dataset.meta) {
+    const m = document.createElement('p');
+    m.className = 'panel-meta';
+    m.textContent = card.dataset.meta;
+    body.appendChild(m);
+  }
+  if (card.dataset.text) {
+    const tx = document.createElement('p');
+    tx.className = 'panel-text';
+    tx.textContent = card.dataset.text;
+    body.appendChild(tx);
+  }
+  block.appendChild(body);
+
+  // 카드 바로 다음에 삽입
+  card.parentNode.insertBefore(block, card.nextSibling);
+  card.classList.add('inline-open');
+  activeInlineCard = card;
+
+  // 인라인 블록으로 부드럽게 스크롤
+  setTimeout(() => block.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+}
+
+function closeInlineDetail() {
+  const existing = document.getElementById('inlineDetail');
+  if (existing) existing.remove();
+  if (activeInlineCard) {
+    activeInlineCard.classList.remove('inline-open');
+    activeInlineCard = null;
+  }
+}
+
+// ── 카드 클릭 — 모바일/데스크톱 분기 ──
 document.getElementById('grid').addEventListener('click', e => {
   const card = e.target.closest('.card, .card-img');
-  if (card) openPanel(card);
+  if (!card) return;
+  if (window.innerWidth <= 600) {
+    openInlineDetail(card);
+  } else {
+    openPanel(card);
+  }
 });
 
 closeBtn.addEventListener('click', closePanel);
 document.getElementById('panelBackdrop').addEventListener('click', closePanel);
-document.addEventListener('keydown', e => { if(e.key==='Escape') closePanel(); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    if (window.innerWidth <= 600) closeInlineDetail();
+    else closePanel();
+  }
+});
 window.addEventListener('resize', calcCols);
 calcCols();
 
