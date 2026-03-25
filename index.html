@@ -131,13 +131,17 @@ html,body{
   });
 
   // 겹치지 않는 초기 위치 배치
-  function signBoundary(){
+  // boundary는 최초 1회 + resize 시에만 계산
+  let cachedBoundary = calcBoundary();
+  function calcBoundary(){
     if(signEl){
       const r = signEl.getBoundingClientRect();
-      return r.left > 0 ? r.left : window.innerWidth - r.width;
+      return r.left > 10 ? r.left : window.innerWidth - signEl.offsetWidth;
     }
     return window.innerWidth * 0.68;
   }
+  window.addEventListener('resize', () => { cachedBoundary = calcBoundary(); });
+  function signBoundary(){ return cachedBoundary; }
 
   items.forEach((item, i) => {
     const maxTries = 200;
@@ -190,26 +194,26 @@ html,body{
         const overlapY = a.y + aH > b.y && a.y < b.y + bH;
 
         if(overlapX && overlapY){
-          // 중심 간 방향으로 튕기기
           const axC = a.x + aW/2, ayC = a.y + aH/2;
           const bxC = b.x + bW/2, byC = b.y + bH/2;
-          const dx = axC - bxC;
-          const dy = ayC - byC;
+          const dx = axC - bxC || 0.1;
+          const dy = ayC - byC || 0.1;
           const len = Math.sqrt(dx*dx + dy*dy) || 1;
           const nx = dx/len, ny = dy/len;
 
-          // 속도 교환 (단순 반사)
-          const dot_a = a.vx*nx + a.vy*ny;
-          const dot_b = b.vx*nx + b.vy*ny;
-          a.vx += (dot_b - dot_a) * nx;
-          a.vy += (dot_b - dot_a) * ny;
-          b.vx += (dot_a - dot_b) * nx;
-          b.vy += (dot_a - dot_b) * ny;
+          // 겹친 거리만큼 완전히 분리
+          const overlapDx = (aW + bW)/2 - Math.abs(dx);
+          const overlapDy = (aH + bH)/2 - Math.abs(dy);
+          const sep = Math.min(overlapDx, overlapDy) / 2 + 1;
+          a.x += nx * sep; a.y += ny * sep;
+          b.x -= nx * sep; b.y -= ny * sep;
 
-          // 겹침 해소
-          const push = 2;
-          a.x += nx * push; a.y += ny * push;
-          b.x -= nx * push; b.y -= ny * push;
+          // 속도 반사 (접근하는 경우에만)
+          const relV = (a.vx - b.vx)*nx + (a.vy - b.vy)*ny;
+          if(relV < 0){
+            a.vx -= relV * nx; a.vy -= relV * ny;
+            b.vx += relV * nx; b.vy += relV * ny;
+          }
         }
       }
     }
