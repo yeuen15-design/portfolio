@@ -63,6 +63,16 @@ html,body{
   display:block;
 }
 
+/* 식물 — 왼쪽 하단 */
+.plant{
+  position:fixed;
+  left:0;
+  bottom:0;
+  z-index:10;
+  width:clamp(180px, 22vw, 380px);
+  pointer-events:none;
+}
+
 /* 모바일 */
 @media(max-width:768px){
   html,body{overflow:hidden;}
@@ -82,6 +92,8 @@ html,body{
 <body>
 
 <div class="landing-bg" aria-hidden="true"></div>
+
+<img class="plant" src="images/tree-cutout.png" alt=""/>
 
 <a class="grand-opening-wrap" href="home.html" aria-label="포트폴리오 홈으로 입장">
   <img class="img-default"
