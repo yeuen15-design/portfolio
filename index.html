@@ -75,14 +75,13 @@ html,body{
 @media(max-width:768px){
   html,body{overflow:hidden;}
   .grand-opening-wrap{
-    right:50%;
-    top:auto;
-    bottom:10vw;
-    transform:translateX(50%);
-    width:clamp(180px, 60vw, 300px);
+    right:0;
+    top:50%;
+    transform:translateY(-50%);
+    width:clamp(160px, 44vw, 300px);
   }
   .grand-opening-wrap:hover{
-    transform:translateX(50%) translateY(-6px);
+    transform:translateY(calc(-50% - 6px));
   }
 }
 </style>
@@ -107,56 +106,114 @@ html,body{
 
 <script>
 (function(){
-  const floaters = document.querySelectorAll('.floater');
-  const signEl   = document.querySelector('.grand-opening-wrap');
+  const signEl = document.querySelector('.grand-opening-wrap');
 
-  floaters.forEach(el => {
+  // 각 floater의 상태를 배열로 관리
+  const items = Array.from(document.querySelectorAll('.floater')).map(el => {
     const size = parseInt(el.dataset.size) || 180;
     el.style.width = size + 'px';
     el.style.height = 'auto';
-
-    // grand-opening 영역을 피해서 초기 위치 설정
-    function safeX(){
-      const signLeft = signEl ? signEl.getBoundingClientRect().left : window.innerWidth * 0.7;
-      return Math.random() * (signLeft - size);
-    }
-
-    let x = safeX();
-    let y = Math.random() * (window.innerHeight - size * 1.5);
-
-    const speed = 0.4 + Math.random() * 0.6;
-    let vx = (Math.random() < 0.5 ? 1 : -1) * speed;
-    let vy = (Math.random() < 0.5 ? 1 : -1) * speed * 0.7;
-
-    const phase = Math.random() * Math.PI * 2;
-    const wobbleAmp  = 1.5 + Math.random() * 2;
-    const wobbleFreq = 0.0008 + Math.random() * 0.0006;
-
-    function tick(t){
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-      const elW = el.offsetWidth  || size;
-      const elH = el.offsetHeight || size;
-
-      // grand-opening 왼쪽 경계
-      const signLeft = signEl ? signEl.getBoundingClientRect().left : w * 0.7;
-      const maxX = signLeft - elW;
-
-      x += vx;
-      y += vy;
-
-      if(x <= 0)      { x = 0;    vx =  Math.abs(vx); }
-      if(x >= maxX)   { x = maxX; vx = -Math.abs(vx); }
-      if(y <= 0)      { y = 0;    vy =  Math.abs(vy); }
-      if(y >= h - elH){ y = h-elH;vy = -Math.abs(vy); }
-
-      const wobble = Math.sin(t * wobbleFreq + phase) * wobbleAmp;
-      el.style.transform = `translate(${x}px, ${y}px) rotate(${wobble}deg)`;
-      requestAnimationFrame(tick);
-    }
-
-    requestAnimationFrame(tick);
+    return {
+      el, size,
+      x: 0, y: 0,
+      vx: (Math.random() < 0.5 ? 1 : -1) * (0.4 + Math.random() * 0.5),
+      vy: (Math.random() < 0.5 ? 1 : -1) * (0.3 + Math.random() * 0.4),
+      phase: Math.random() * Math.PI * 2,
+      wobbleAmp:  1.5 + Math.random() * 2,
+      wobbleFreq: 0.0008 + Math.random() * 0.0006,
+    };
   });
+
+  // 겹치지 않는 초기 위치 배치
+  function signBoundary(){
+    return signEl ? signEl.getBoundingClientRect().left : window.innerWidth * 0.68;
+  }
+
+  items.forEach((item, i) => {
+    const maxTries = 200;
+    for(let t = 0; t < maxTries; t++){
+      const boundary = signBoundary();
+      item.x = Math.random() * Math.max(0, boundary - item.size);
+      item.y = Math.random() * Math.max(0, window.innerHeight - item.size);
+      // 앞서 배치된 floater들과 겹치는지 확인
+      const overlap = items.slice(0, i).some(other => {
+        return !(item.x + item.size < other.x ||
+                 item.x > other.x + other.size ||
+                 item.y + item.size < other.y ||
+                 item.y > other.y + other.size);
+      });
+      if(!overlap) break;
+    }
+  });
+
+  function loop(t){
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    const boundary = signBoundary();
+
+    // 이동
+    items.forEach(item => {
+      item.x += item.vx;
+      item.y += item.vy;
+
+      const elW = item.el.offsetWidth  || item.size;
+      const elH = item.el.offsetHeight || item.size;
+      const maxX = boundary - elW;
+
+      // 벽 튕기기
+      if(item.x <= 0)      { item.x = 0;    item.vx =  Math.abs(item.vx); }
+      if(item.x >= maxX)   { item.x = maxX; item.vx = -Math.abs(item.vx); }
+      if(item.y <= 0)      { item.y = 0;    item.vy =  Math.abs(item.vy); }
+      if(item.y >= h - elH){ item.y = h-elH;item.vy = -Math.abs(item.vy); }
+    });
+
+    // floater 간 충돌
+    for(let i = 0; i < items.length; i++){
+      for(let j = i+1; j < items.length; j++){
+        const a = items[i], b = items[j];
+        const aW = a.el.offsetWidth  || a.size;
+        const aH = a.el.offsetHeight || a.size;
+        const bW = b.el.offsetWidth  || b.size;
+        const bH = b.el.offsetHeight || b.size;
+
+        const overlapX = a.x + aW > b.x && a.x < b.x + bW;
+        const overlapY = a.y + aH > b.y && a.y < b.y + bH;
+
+        if(overlapX && overlapY){
+          // 중심 간 방향으로 튕기기
+          const axC = a.x + aW/2, ayC = a.y + aH/2;
+          const bxC = b.x + bW/2, byC = b.y + bH/2;
+          const dx = axC - bxC;
+          const dy = ayC - byC;
+          const len = Math.sqrt(dx*dx + dy*dy) || 1;
+          const nx = dx/len, ny = dy/len;
+
+          // 속도 교환 (단순 반사)
+          const dot_a = a.vx*nx + a.vy*ny;
+          const dot_b = b.vx*nx + b.vy*ny;
+          a.vx += (dot_b - dot_a) * nx;
+          a.vy += (dot_b - dot_a) * ny;
+          b.vx += (dot_a - dot_b) * nx;
+          b.vy += (dot_a - dot_b) * ny;
+
+          // 겹침 해소
+          const push = 2;
+          a.x += nx * push; a.y += ny * push;
+          b.x -= nx * push; b.y -= ny * push;
+        }
+      }
+    }
+
+    // 렌더
+    items.forEach(item => {
+      const wobble = Math.sin(t * item.wobbleFreq + item.phase) * item.wobbleAmp;
+      item.el.style.transform = `translate(${item.x}px, ${item.y}px) rotate(${wobble}deg)`;
+    });
+
+    requestAnimationFrame(loop);
+  }
+
+  requestAnimationFrame(loop);
 })();
 </script>
 </body>
