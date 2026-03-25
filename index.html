@@ -95,10 +95,10 @@ html,body{
 
 <div class="landing-bg" aria-hidden="true"></div>
 
-<img class="floater" src="images/key.png"     alt="" data-size="160"/>
-<img class="floater" src="images/man.png"     alt="" data-size="220"/>
-<img class="floater" src="images/tree.png"    alt="" data-size="200"/>
-<img class="floater" src="images/welcome.png" alt="" data-size="200"/>
+<img class="floater" src="images/key.png"     alt="" data-size="320"/>
+<img class="floater" src="images/man.png"     alt="" data-size="440"/>
+<img class="floater" src="images/tree.png"    alt="" data-size="400"/>
+<img class="floater" src="images/welcome.png" alt="" data-size="400"/>
 
 <a class="grand-opening-wrap" href="home.html" aria-label="포트폴리오 홈으로 입장">
   <img class="img-default"
@@ -112,22 +112,26 @@ html,body{
 <script>
 (function(){
   const floaters = document.querySelectorAll('.floater');
+  const signEl   = document.querySelector('.grand-opening-wrap');
 
   floaters.forEach(el => {
     const size = parseInt(el.dataset.size) || 180;
     el.style.width = size + 'px';
     el.style.height = 'auto';
 
-    // 랜덤 초기 위치
-    let x = Math.random() * (window.innerWidth  - size);
+    // grand-opening 영역을 피해서 초기 위치 설정
+    function safeX(){
+      const signLeft = signEl ? signEl.getBoundingClientRect().left : window.innerWidth * 0.7;
+      return Math.random() * (signLeft - size);
+    }
+
+    let x = safeX();
     let y = Math.random() * (window.innerHeight - size * 1.5);
 
-    // 랜덤 속도 (방향 포함)
     const speed = 0.4 + Math.random() * 0.6;
     let vx = (Math.random() < 0.5 ? 1 : -1) * speed;
     let vy = (Math.random() < 0.5 ? 1 : -1) * speed * 0.7;
 
-    // 흔들림용 위상
     const phase = Math.random() * Math.PI * 2;
     const wobbleAmp  = 1.5 + Math.random() * 2;
     const wobbleFreq = 0.0008 + Math.random() * 0.0006;
@@ -138,17 +142,19 @@ html,body{
       const elW = el.offsetWidth  || size;
       const elH = el.offsetHeight || size;
 
+      // grand-opening 왼쪽 경계
+      const signLeft = signEl ? signEl.getBoundingClientRect().left : w * 0.7;
+      const maxX = signLeft - elW;
+
       x += vx;
       y += vy;
 
-      // 벽 튕기기
-      if(x <= 0)       { x = 0;      vx = Math.abs(vx); }
-      if(x >= w - elW) { x = w-elW;  vx = -Math.abs(vx); }
-      if(y <= 0)       { y = 0;      vy = Math.abs(vy); }
-      if(y >= h - elH) { y = h-elH;  vy = -Math.abs(vy); }
+      if(x <= 0)      { x = 0;    vx =  Math.abs(vx); }
+      if(x >= maxX)   { x = maxX; vx = -Math.abs(vx); }
+      if(y <= 0)      { y = 0;    vy =  Math.abs(vy); }
+      if(y >= h - elH){ y = h-elH;vy = -Math.abs(vy); }
 
       const wobble = Math.sin(t * wobbleFreq + phase) * wobbleAmp;
-
       el.style.transform = `translate(${x}px, ${y}px) rotate(${wobble}deg)`;
       requestAnimationFrame(tick);
     }
