@@ -108,9 +108,11 @@ html,body{
 (function(){
   const signEl = document.querySelector('.grand-opening-wrap');
 
+  const isMobile = window.innerWidth <= 768;
+
   // 각 floater의 상태를 배열로 관리
   const items = Array.from(document.querySelectorAll('.floater')).map(el => {
-    const size = parseInt(el.dataset.size) || 180;
+    const size = Math.round((parseInt(el.dataset.size) || 180) * (isMobile ? 0.5 : 1));
     el.style.width = size + 'px';
     el.style.height = 'auto';
     return {
@@ -126,7 +128,11 @@ html,body{
 
   // 겹치지 않는 초기 위치 배치
   function signBoundary(){
-    return signEl ? signEl.getBoundingClientRect().left : window.innerWidth * 0.68;
+    if(signEl){
+      const r = signEl.getBoundingClientRect();
+      return r.left > 0 ? r.left : window.innerWidth - r.width;
+    }
+    return window.innerWidth * 0.68;
   }
 
   items.forEach((item, i) => {
